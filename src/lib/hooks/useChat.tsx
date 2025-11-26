@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import { getSuggestions } from '../actions';
 import { MinimalProvider } from '../models/types';
 import { getAutoMediaSearch } from '../config/clientRegistry';
+import { authClient } from '../auth/client';
 
 export type Section = {
   userMessage: UserMessage;
@@ -167,11 +168,14 @@ const checkConfig = async (
     });
 
     setIsConfigReady(true);
+    setHasError(false);
+    return true;
   } catch (err: any) {
     console.error('An error occurred while checking the configuration:', err);
     toast.error(err.message);
     setIsConfigReady(false);
     setHasError(true);
+    return false;
   }
 };
 
@@ -266,6 +270,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const params: { chatId: string } = useParams();
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get('q');
+  const { data: session, isPending: isSessionPending } = authClient.useSession();
 
   const [chatId, setChatId] = useState<string | undefined>(params.chatId);
   const [newChatCreated, setNewChatCreated] = useState(false);
@@ -302,8 +307,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [isConfigReady, setIsConfigReady] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [hasCheckedConfig, setHasCheckedConfig] = useState(false);
 
   const messagesRef = useRef<Message[]>([]);
+  const lastSessionIdRef = useRef<string | undefined>();
 
   const chatTurns = useMemo((): ChatTurn[] => {
     return messages.filter(
@@ -427,14 +434,57 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   }, [messages]);
 
   useEffect(() => {
-    checkConfig(
-      setChatModelProvider,
-      setEmbeddingModelProvider,
-      setIsConfigReady,
-      setHasError,
-    );
+    if (!session) {
+      lastSessionIdRef.current = undefined;
+      return;
+    }
+
+    const currentId = session.user?.id;
+    if (!currentId || lastSessionIdRef.current === currentId) {
+      return;
+    }
+
+    lastSessionIdRef.current = currentId;
+
+    if (hasCheckedConfig) {
+      setHasCheckedConfig(false);
+      setIsConfigReady(false);
+    }
+  }, [session, hasCheckedConfig]);
+
+  useEffect(() => {
+    if (isSessionPending) {
+      return;
+    }
+
+    if (!session) {
+      setHasCheckedConfig(false);
+      setIsConfigReady(false);
+      return;
+    }
+
+    if (hasCheckedConfig) {
+      return;
+    }
+
+    const loadConfig = async () => {
+      const success = await checkConfig(
+        setChatModelProvider,
+        setEmbeddingModelProvider,
+        setIsConfigReady,
+        setHasError,
+      );
+
+      setHasCheckedConfig(true);
+
+      if (!success) {
+        console.warn('Failed to initialize model providers.');
+      }
+    };
+
+    void loadConfig();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [session, isSessionPending, hasCheckedConfig]);
 
   useEffect(() => {
     if (params.chatId && params.chatId !== chatId) {
@@ -528,6 +578,16 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     if (loading || !message) return;
     setLoading(true);
     setMessageAppeared(false);
+
+    if (
+      !isConfigReady ||
+      !chatModelProvider.providerId ||
+      !embeddingModelProvider.providerId
+    ) {
+      toast.error('Model providers are not ready yet. Please try again.');
+      setLoading(false);
+      return;
+    }
 
     if (messages.length <= 1) {
       window.history.replaceState(null, '', `/c/${chatId}`);
