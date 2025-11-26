@@ -2,7 +2,10 @@ import path from 'path';
 import fs from 'fs';
 import { Config, ConfigModelProvider, UIConfigSections } from './types';
 import { hashObj } from '../serverUtils';
-import { getModelProvidersUIConfigSection } from '../models/providers';
+import {
+  getModelProvidersUIConfigSection,
+  providers,
+} from '../models/providers';
 import logger from '@/lib/logger';
 import { loadOpenAICompatibleProviders } from './openaiCompatible';
 
@@ -165,6 +168,16 @@ class ConfigManager {
   }
 
   private migrateConfig(config: Config): Config {
+    const validProviderTypes = new Set(Object.keys(providers));
+    const filteredProviders = config.modelProviders.filter((provider) =>
+      validProviderTypes.has(provider.type),
+    );
+
+    if (filteredProviders.length !== config.modelProviders.length) {
+      config.modelProviders = filteredProviders;
+      this.saveConfig();
+    }
+
     /* TODO: Add migrations */
     return config;
   }

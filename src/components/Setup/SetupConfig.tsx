@@ -63,9 +63,7 @@ const SetupConfig = ({
     }
   };
 
-  const visibleProviders = providers.filter(
-    (p) => p.name.toLowerCase() !== 'transformers',
-  );
+  const visibleProviders = providers;
   const hasProviders =
     visibleProviders.filter((p) => p.chatModels.length > 0).length > 0;
 

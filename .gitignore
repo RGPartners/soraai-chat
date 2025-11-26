@@ -39,3 +39,7 @@ db.sqlite
 /searxng
 
 certificates
+
+# Others
+strategy_and_steps.txt
+terminal_output.txt
