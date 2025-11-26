@@ -31,6 +31,11 @@ class ModelRegistry {
           ...p,
           provider: createProviderInstance(provider, p.id, p.name, p.config),
         });
+        modelRegistryLogger.debug('Initialized model provider.', {
+          type: p.type,
+          id: p.id,
+          name: p.name,
+        });
       } catch (error) {
         modelRegistryLogger.error('Failed to initialize provider.', {
           type: p.type,

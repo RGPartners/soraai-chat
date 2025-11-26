@@ -1,23 +1,15 @@
-import path from 'path';
-import fs from 'fs';
+import crypto from 'crypto';
+
 import { Config, ConfigModelProvider, UIConfigSections } from './types';
 import { hashObj } from '../serverUtils';
-import {
-  getModelProvidersUIConfigSection,
-  providers,
-} from '../models/providers';
+import { getModelProvidersUIConfigSection } from '../models/providers';
 import logger from '@/lib/logger';
 import { loadOpenAICompatibleProviders } from './openaiCompatible';
 
 const configLogger = logger.withDefaults({ tag: 'config' });
 
 class ConfigManager {
-  configPath: string = path.join(
-    process.env.DATA_DIR || process.cwd(),
-    '/data/config.json',
-  );
   configVersion = 1;
-  private canPersistConfig = true;
   private readonly chatCapableProviders = new Set([
     'openai',
     'anthropic',
@@ -29,295 +21,201 @@ class ConfigManager {
     'lemonade',
     'ollama',
   ]);
-  currentConfig: Config = {
-    version: this.configVersion,
-    setupComplete: false,
-    preferences: {},
-    personalization: {},
-    modelProviders: [],
-    search: {
-      searxngURL: '',
-    },
-  };
-  uiConfigSections: UIConfigSections = {
-    preferences: [
-      {
-        name: 'Theme',
-        key: 'theme',
-        type: 'select',
-        options: [
-          {
-            name: 'Light',
-            value: 'light',
-          },
-          {
-            name: 'Dark',
-            value: 'dark',
-          },
-        ],
-        required: false,
-        description: 'Choose between light and dark layouts for the app.',
-        default: 'dark',
-        scope: 'client',
-      },
-      {
-        name: 'Measurement Unit',
-        key: 'measureUnit',
-        type: 'select',
-        options: [
-          {
-            name: 'Imperial',
-            value: 'Imperial',
-          },
-          {
-            name: 'Metric',
-            value: 'Metric',
-          },
-        ],
-        required: false,
-        description: 'Choose between Metric  and Imperial measurement unit.',
-        default: 'Metric',
-        scope: 'client',
-      },
-      {
-        name: 'Auto video & image search',
-        key: 'autoMediaSearch',
-        type: 'switch',
-        required: false,
-        description: 'Automatically search for relevant images and videos.',
-        default: true,
-        scope: 'client',
-      },
-    ],
-    personalization: [
-      {
-        name: 'System Instructions',
-        key: 'systemInstructions',
-        type: 'textarea',
-        required: false,
-        description: 'Add custom behavior or tone for the model.',
-        placeholder:
-          'e.g., "Respond in a friendly and concise tone" or "Use British English and format answers as bullet points."',
-        scope: 'client',
-      },
-    ],
-    modelProviders: [],
-    search: [
-      {
-        name: 'SearXNG URL',
-        key: 'searxngURL',
-        type: 'string',
-        required: false,
-        description: 'The URL of your SearXNG instance',
-        placeholder: 'http://localhost:4000',
-        default: '',
-        scope: 'server',
-        env: 'SEARXNG_API_URL',
-      },
-    ],
-  };
+
+  private currentConfig: Config;
+  private uiConfigSections: UIConfigSections;
 
   constructor() {
-    this.initialize();
+    this.uiConfigSections = this.buildUIConfigSections();
+    this.currentConfig = this.buildInitialConfig();
+    this.syncSetupCompletionState();
   }
 
-  private initialize() {
-    this.initializeConfig();
-    this.initializeFromEnv();
+  private buildUIConfigSections(): UIConfigSections {
+    return {
+      preferences: [
+        {
+          name: 'Theme',
+          key: 'theme',
+          type: 'select',
+          options: [
+            {
+              name: 'Light',
+              value: 'light',
+            },
+            {
+              name: 'Dark',
+              value: 'dark',
+            },
+          ],
+          required: false,
+          description: 'Choose between light and dark layouts for the app.',
+          default: 'dark',
+          scope: 'client',
+        },
+        {
+          name: 'Measurement Unit',
+          key: 'measureUnit',
+          type: 'select',
+          options: [
+            {
+              name: 'Imperial',
+              value: 'Imperial',
+            },
+            {
+              name: 'Metric',
+              value: 'Metric',
+            },
+          ],
+          required: false,
+          description: 'Choose between Metric  and Imperial measurement unit.',
+          default: 'Metric',
+          scope: 'client',
+        },
+        {
+          name: 'Auto video & image search',
+          key: 'autoMediaSearch',
+          type: 'switch',
+          required: false,
+          description: 'Automatically search for relevant images and videos.',
+          default: true,
+          scope: 'client',
+        },
+      ],
+      personalization: [
+        {
+          name: 'System Instructions',
+          key: 'systemInstructions',
+          type: 'textarea',
+          required: false,
+          description: 'Add custom behavior or tone for the model.',
+          placeholder:
+            'e.g., "Respond in a friendly and concise tone" or "Use British English and format answers as bullet points."',
+          scope: 'client',
+        },
+      ],
+      modelProviders: getModelProvidersUIConfigSection(),
+      search: [
+        {
+          name: 'SearXNG URL',
+          key: 'searxngURL',
+          type: 'string',
+          required: false,
+          description: 'The URL of your SearXNG instance',
+          placeholder: 'http://localhost:4000',
+          default: '',
+          scope: 'server',
+          env: 'SEARXNG_API_URL',
+        },
+      ],
+    };
   }
 
-  private saveConfig() {
-    if (!this.canPersistConfig) return;
-    fs.writeFileSync(
-      this.configPath,
-      JSON.stringify(this.currentConfig, null, 2),
-    );
+  private buildInitialConfig(): Config {
+    const providers = this.buildProvidersFromEnv();
+    const search = this.buildSearchConfig();
+
+    return {
+      version: this.configVersion,
+      setupComplete: this.hasChatProviderConfiguredInternal(providers),
+      preferences: {},
+      personalization: {},
+      modelProviders: providers,
+      search,
+    };
   }
 
-  private initializeConfig() {
-    const configDir = path.dirname(this.configPath);
+  private buildProvidersFromEnv(): ConfigModelProvider[] {
+    const configuredProviders: ConfigModelProvider[] = [];
+    const providerSections = this.uiConfigSections.modelProviders ?? [];
 
-    if (!fs.existsSync(configDir)) {
-      try {
-        fs.mkdirSync(configDir, { recursive: true });
-      } catch (err) {
-        this.canPersistConfig = false;
-        configLogger.warn(
-          `Config directory ${configDir} is not writable. Proceeding without file persistence.`,
-        );
+    providerSections.forEach((section) => {
+      const config: Record<string, any> = {};
+      const requiredKeys: string[] = [];
+
+      section.fields.forEach((field) => {
+        const value =
+          (field.env ? process.env[field.env] : undefined) ??
+          field.default ??
+          '';
+        config[field.key] = value;
+
+        if (field.required) {
+          requiredKeys.push(field.key);
+        }
+      });
+
+      const isConfigured = requiredKeys.every((key) => this.hasValue(config[key]));
+
+      if (!isConfigured) {
+        if (requiredKeys.length > 0) {
+          configLogger.debug(
+            `Skipping provider ${section.name} because required environment variables are missing.`,
+          );
+        }
+        return;
       }
-    }
 
-    const configExists = fs.existsSync(this.configPath);
+      const hash = hashObj(config);
+      const id = this.createStableProviderId(section.key, hash);
 
-    if (!configExists && this.canPersistConfig) {
-      this.canPersistConfig = this.tryWriteConfig();
-    }
-
-    if (!fs.existsSync(this.configPath)) {
-      if (!this.canPersistConfig) {
-        configLogger.debug(
-          'Config file not found and persistence disabled; using in-memory defaults.',
-        );
-      }
-      return;
-    }
-
-    try {
-      this.currentConfig = JSON.parse(
-        fs.readFileSync(this.configPath, 'utf-8'),
-      );
-    } catch (err) {
-      if (err instanceof SyntaxError) {
-        configLogger.error(
-          `Error parsing config file at ${this.configPath}.`,
-          err,
-        );
-        configLogger.warn(
-          'Loading default config and overwriting the existing file.',
-        );
-        this.canPersistConfig = this.tryWriteConfig();
-      } else {
-        configLogger.error('Unknown error reading config file.', err);
-      }
-      return;
-    }
-
-    this.currentConfig = this.migrateConfig(this.currentConfig);
-  }
-
-  private tryWriteConfig() {
-    try {
-      fs.writeFileSync(
-        this.configPath,
-        JSON.stringify(this.currentConfig, null, 2),
-      );
-      return true;
-    } catch (err) {
-      configLogger.warn(
-        `Failed to persist config at ${this.configPath}. Continuing without persistence.`,
-        err,
-      );
-      return false;
-    }
-  }
-
-  private migrateConfig(config: Config): Config {
-    const validProviderTypes = new Set(Object.keys(providers));
-    const filteredProviders = config.modelProviders.filter((provider) =>
-      validProviderTypes.has(provider.type),
-    );
-
-    if (filteredProviders.length !== config.modelProviders.length) {
-      config.modelProviders = filteredProviders;
-      this.saveConfig();
-    }
-
-    /* TODO: Add migrations */
-    return config;
-  }
-
-  private initializeFromEnv() {
-    /* providers section*/
-    const providerConfigSections = getModelProvidersUIConfigSection();
-
-    this.uiConfigSections.modelProviders = providerConfigSections;
-
-    const newProviders: ConfigModelProvider[] = [];
-
-    providerConfigSections.forEach((provider) => {
-      const newProvider: ConfigModelProvider & { required?: string[] } = {
-        id: crypto.randomUUID(),
-        name: `${provider.name}`,
-        type: provider.key,
+      configuredProviders.push({
+        id,
+        name: section.name,
+        type: section.key,
+        config,
         chatModels: [],
         embeddingModels: [],
-        config: {},
-        required: [],
-        hash: '',
-      };
-
-      provider.fields.forEach((field) => {
-        newProvider.config[field.key] =
-          process.env[field.env!] ||
-          field.default ||
-          ''; /* Env var must exist for providers */
-
-        if (field.required) newProvider.required?.push(field.key);
+        hash,
       });
-
-      let configured = true;
-
-      newProvider.required?.forEach((r) => {
-        if (!newProvider.config[r]) {
-          configured = false;
-        }
-      });
-
-      if (configured) {
-        const hash = hashObj(newProvider.config);
-        newProvider.hash = hash;
-        delete newProvider.required;
-
-        const exists = this.currentConfig.modelProviders.find(
-          (p) => p.hash === hash,
-        );
-
-        if (!exists) {
-          newProviders.push(newProvider);
-        }
-      }
     });
 
     const openaiCompatibleProviders = loadOpenAICompatibleProviders();
 
-    const openaiProviders = openaiCompatibleProviders.reduce<ConfigModelProvider[]>(
-      (providers, provider) => {
-        const config = {
-          apiKey: provider.apiKey,
-          baseURL: provider.baseUrl,
-        };
+    openaiCompatibleProviders.forEach((provider) => {
+      const config = {
+        apiKey: provider.apiKey,
+        baseURL: provider.baseUrl,
+      };
 
-        const hash = hashObj(config);
+      const hash = hashObj(config);
+      const id = this.createStableProviderId(
+        `openai-${this.sanitizeSegment(provider.provider)}`,
+        hash,
+      );
 
-        const exists = this.currentConfig.modelProviders.find(
-          (p) => p.hash === hash,
-        );
+      configuredProviders.push({
+        id,
+        name: provider.provider,
+        type: 'openai',
+        config,
+        chatModels: provider.models.map((model) => ({
+          name: model.uiName,
+          key: model.apiName,
+        })),
+        embeddingModels: [],
+        hash,
+      });
+    });
 
-        if (exists) {
-          return providers;
-        }
-
-        providers.push({
-          id: crypto.randomUUID(),
-          name: provider.provider,
-          type: 'openai',
-          config,
-          chatModels: provider.models.map((model) => ({
-            name: model.uiName,
-            key: model.apiName,
-          })),
-          embeddingModels: [],
-          hash,
-        });
-
-        return providers;
-      },
-      [],
-    );
-
-    this.currentConfig.modelProviders.push(...newProviders, ...openaiProviders);
-
-    /* search section */
-    this.uiConfigSections.search.forEach((f) => {
-      if (f.env && !this.currentConfig.search[f.key]) {
-        this.currentConfig.search[f.key] =
-          process.env[f.env] ?? f.default ?? '';
+    const deduped = new Map<string, ConfigModelProvider>();
+    configuredProviders.forEach((provider) => {
+      if (!deduped.has(provider.hash)) {
+        deduped.set(provider.hash, provider);
       }
     });
 
-    this.syncSetupCompletionState();
-    this.saveConfig();
+    return Array.from(deduped.values());
+  }
+
+  private buildSearchConfig(): Config['search'] {
+    return {
+      searxngURL: process.env.SEARXNG_API_URL ?? '',
+    };
+  }
+
+  private saveConfig() {
+    // Configuration is sourced from environment variables and kept in-memory.
   }
 
   public getConfig(key: string, defaultValue?: any): any {
@@ -445,7 +343,7 @@ class ConfigManager {
       );
     } else {
       provider.embeddingModels = provider.embeddingModels.filter(
-        (m) => m.key != modelKey,
+        (m) => m.key !== modelKey,
       );
     }
 
@@ -480,9 +378,15 @@ class ConfigManager {
   }
 
   public hasChatProviderConfigured(): boolean {
-    return this.currentConfig.modelProviders.some((provider) =>
-      this.isChatProviderConfigured(provider),
+    return this.hasChatProviderConfiguredInternal(
+      this.currentConfig.modelProviders,
     );
+  }
+
+  private hasChatProviderConfiguredInternal(
+    providers: ConfigModelProvider[],
+  ): boolean {
+    return providers.some((provider) => this.isChatProviderConfigured(provider));
   }
 
   private isChatProviderConfigured(provider: ConfigModelProvider) {
@@ -491,28 +395,43 @@ class ConfigManager {
     }
 
     const configValues = Object.values(provider.config ?? {});
-    return configValues.some((value) => {
-      if (value === null || value === undefined) return false;
-      if (typeof value === 'string') {
-        return value.trim().length > 0;
-      }
+    return configValues.some((value) => this.hasValue(value));
+  }
 
-      if (Array.isArray(value)) {
-        return value.length > 0;
-      }
+  private hasValue(value: unknown): boolean {
+    if (value === null || value === undefined) return false;
+    if (typeof value === 'string') {
+      return value.trim().length > 0;
+    }
 
-      if (typeof value === 'object') {
-        return Object.keys(value).length > 0;
-      }
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
 
-      return Boolean(value);
-    });
+    if (typeof value === 'object') {
+      return Object.keys(value as Record<string, unknown>).length > 0;
+    }
+
+    return Boolean(value);
   }
 
   private syncSetupCompletionState() {
-    if (!this.hasChatProviderConfigured()) {
-      this.currentConfig.setupComplete = false;
-    }
+    this.currentConfig.setupComplete = this.hasChatProviderConfiguredInternal(
+      this.currentConfig.modelProviders,
+    );
+  }
+
+  private createStableProviderId(prefix: string, hash: string): string {
+    const segment = this.sanitizeSegment(prefix);
+    return `${segment}-${hash.slice(0, 8)}`;
+  }
+
+  private sanitizeSegment(value: string): string {
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 32) || 'provider';
   }
 }
 

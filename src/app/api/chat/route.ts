@@ -285,6 +285,13 @@ export const POST = async (req: Request) => {
 
     const registry = new ModelRegistry();
 
+    chatLogger.debug('Loading models with providers.', {
+      chatProviderId: body.chatModel.providerId,
+      embeddingProviderId: body.embeddingModel.providerId,
+      chatModelKey: body.chatModel.key,
+      embeddingModelKey: body.embeddingModel.key,
+    });
+
     const [llm, embedding] = await Promise.all([
       registry.loadChatModel(body.chatModel.providerId, body.chatModel.key),
       registry.loadEmbeddingModel(
