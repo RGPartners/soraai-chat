@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import Focus from './MessageInputActions/Focus';
@@ -7,6 +7,10 @@ import Attach from './MessageInputActions/Attach';
 import { useChat } from '@/lib/hooks/useChat';
 import ModelSelector from './MessageInputActions/ChatModelSelector';
 import { useTranslations } from 'next-intl';
+import {
+  isModelSelectorEnabled,
+  isSearchPreferenceEnabled,
+} from '@/lib/config/features';
 
 const EmptyChatMessageInput = () => {
   const { sendMessage } = useChat();
@@ -70,15 +74,15 @@ const EmptyChatMessageInput = () => {
           <Optimization />
           <div className="flex flex-row items-center space-x-2">
             <div className="flex flex-row items-center space-x-1">
-              <ModelSelector />
-              <Focus />
+              {isModelSelectorEnabled && <ModelSelector />}
+              {isSearchPreferenceEnabled && <Focus />}
               <Attach />
             </div>
             <button
               disabled={message.trim().length === 0}
               className="bg-sky-500 text-white disabled:text-black/50 dark:disabled:text-white/50 disabled:bg-[#e0e0dc] dark:disabled:bg-[#ececec21] hover:bg-opacity-85 transition duration-100 rounded-full p-2"
             >
-              <ArrowRight className="bg-background" size={17} />
+              <ArrowUp className="bg-background" size={17} />
             </button>
           </div>
         </div>

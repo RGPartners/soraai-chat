@@ -148,7 +148,7 @@ const AttachSmall = () => {
         multiple
         hidden
       />
-      <Paperclip size={16} />
+      <Paperclip size={16} className="-rotate-45 transform" />
     </button>
   );
 };
