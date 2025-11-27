@@ -23,6 +23,7 @@ import { getSuggestions } from '../actions';
 import { MinimalProvider } from '../models/types';
 import { getAutoMediaSearch } from '../config/clientRegistry';
 import { authClient } from '../auth/client';
+import { defaultChatModelKey } from '../config/features';
 
 export type Section = {
   userMessage: UserMessage;
@@ -119,6 +120,9 @@ const checkConfig = async (
 
     const chatModelProvider =
       providers.find((p) => p.id === chatModelProviderId) ??
+      providers.find((p) =>
+        p.chatModels.some((m) => m.key === defaultChatModelKey),
+      ) ??
       providers.find((p) => p.chatModels.length > 0);
 
     if (!chatModelProvider) {
@@ -131,6 +135,9 @@ const checkConfig = async (
 
     const chatModel =
       chatModelProvider.chatModels.find((m) => m.key === chatModelKey) ??
+      chatModelProvider.chatModels.find(
+        (m) => m.key === defaultChatModelKey,
+      ) ??
       chatModelProvider.chatModels[0];
     chatModelKey = chatModel.key;
 

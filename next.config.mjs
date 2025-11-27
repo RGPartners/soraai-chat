@@ -29,6 +29,16 @@ const nextConfig = {
       },
     ],
   },
+  env: {
+    NEXT_PUBLIC_ENABLE_MODEL_SELECTOR:
+      process.env.MODEL_SELECTOR ?? 'false',
+    NEXT_PUBLIC_ENABLE_SEARCH_PREFERENCE:
+      process.env.SEARCH_PREFERENCE ?? 'false',
+    NEXT_PUBLIC_DEFAULT_CHAT_MODEL_KEY:
+      process.env.DEFAULT_CHAT_MODEL_KEY ?? 'gpt-5-nano',
+    NEXT_PUBLIC_ENABLE_COPILOT_TOGGLE:
+      process.env.COPILOT_TOGGLE ?? 'false',
+  },
   serverExternalPackages: ['pdf-parse'],
 };
 
