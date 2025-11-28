@@ -30,14 +30,17 @@
     "adminDashboard": "Tableau de bord Admin",
     "keyboardShortcuts": "Raccourcis clavier",
     "reportAnIssue": "Signaler un problème",
-    "joinCommunity": "Rejoindre la communauté",
+    "help": "Aide",
+    "upgradePlan": "Plan de mise à niveau",
     "userSettings": "Paramètres utilisateur",
     "themeLight": "Clair",
     "themeDark": "Foncé"
   },
   "Toasts": {
     "keyboardShortcutsComingSoon": "Les raccourcis clavier arrivent bientôt.",
-    "notificationsComingSoon": "La fonctionnalité de notifications arrive bientôt."
+    "notificationsComingSoon": "La fonctionnalité de notifications arrive bientôt.",
+    "helpComingSoon": "La fonctionnalité d'aide arrive bientôt !",
+    "upgradePlanComingSoon": "La fonctionnalité de plan de mise à niveau arrive bientôt !"
   },
   "Auth": {
     "signOut": "Se déconnecter",

@@ -30,14 +30,17 @@
     "adminDashboard": "Urubuga rwa admin",
     "keyboardShortcuts": "Inzira ngufi za mudasobwa",
     "reportAnIssue": "Tanga ikibazo",
-    "joinCommunity": "Injira mu muryango",
+    "help": "Ubufasha",
+    "upgradePlan": "Kuzamura gahunda",
     "userSettings": "Amagenamiterere y'umukoresha",
     "themeLight": "Urumuri",
     "themeDark": "Umukara"
   },
   "Toasts": {
     "keyboardShortcutsComingSoon": "Inzira ngufi za mudasobwa zirimo kuza vuba.",
-    "notificationsComingSoon": "Ibiranga amatangazo birimo kuza vuba."
+    "notificationsComingSoon": "Ibiranga amatangazo birimo kuza vuba.",
+    "helpComingSoon": "Ibiranga ubufasha birimo kuza vuba!",
+    "upgradePlanComingSoon": "Gahunda yo kuzamura iraza vuba!"
   },
   "Auth": {
     "signOut": "Sohoka",
