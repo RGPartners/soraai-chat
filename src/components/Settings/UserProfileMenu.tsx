@@ -26,9 +26,10 @@ import {
   Settings2,
   Sparkles,
   Sun,
-  Users,
   Shield,
   Check,
+  CircleHelp,
+  Zap,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import SettingsDialogue, {
@@ -270,6 +271,14 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
     toast.info(tToasts('notificationsComingSoon'));
   };
 
+  const handleHelp = () => {
+    toast.info(tToasts('helpComingSoon'));
+  };
+
+  const handleUpgradePlan = () => {
+    toast.info(tToasts('upgradePlanComingSoon'));
+  };
+
   const persistLocalePreference = (nextLocale: SupportedLocaleCode) => {
     if (typeof document === 'undefined') {
       return;
@@ -496,6 +505,14 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
                   }
                 />
                 <MenuButton
+                  icon={Zap}
+                  label={tMenu('upgradePlan')}
+                  onClick={() => {
+                    closeMenu();
+                    handleUpgradePlan();
+                  }}
+                />
+                <MenuButton
                   icon={Bell}
                   label={tMenu('notifications')}
                   onClick={() => {
@@ -570,11 +587,11 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
                   }}
                 />
                 <MenuButton
-                  icon={Users}
-                  label={tMenu('joinCommunity')}
+                  icon={CircleHelp}
+                  label={tMenu('help')}
                   onClick={() => {
                     closeMenu();
-                    openExternal('https://discord.gg/26aArMy8tT');
+                    handleHelp();
                   }}
                 />
                 <MenuButton

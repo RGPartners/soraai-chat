@@ -30,14 +30,17 @@
     "adminDashboard": "Admin Dashboard",
     "keyboardShortcuts": "Keyboard Shortcuts",
     "reportAnIssue": "Report an issue",
-    "joinCommunity": "Join Community",
+    "help": "Help",
+    "upgradePlan": "Upgrade plan",
     "userSettings": "User Settings",
     "themeLight": "Light",
     "themeDark": "Dark"
   },
   "Toasts": {
     "keyboardShortcutsComingSoon": "Keyboard shortcuts are coming soon.",
-    "notificationsComingSoon": "Notifications feature coming soon."
+    "notificationsComingSoon": "Notifications feature coming soon.",
+    "helpComingSoon": "Help feature coming soon!",
+    "upgradePlanComingSoon": "Upgrade plan feature coming soon!"
   },
   "Auth": {
     "signOut": "Sign out",
