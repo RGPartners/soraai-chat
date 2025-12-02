@@ -242,6 +242,7 @@ const handleHistorySave = async (
 };
 
 export const POST = async (req: Request) => {
+  const requestStartTime = Date.now();
   try {
     const session = await getSessionFromRequest(req);
 
@@ -292,6 +293,7 @@ export const POST = async (req: Request) => {
       embeddingModelKey: body.embeddingModel.key,
     });
 
+    const modelLoadStart = Date.now();
     const [llm, embedding] = await Promise.all([
       registry.loadChatModel(body.chatModel.providerId, body.chatModel.key),
       registry.loadEmbeddingModel(
@@ -299,6 +301,7 @@ export const POST = async (req: Request) => {
         body.embeddingModel.key,
       ),
     ]);
+    chatLogger.info('Models loaded', { durationMs: Date.now() - modelLoadStart });
 
     const humanMessageId =
       message.messageId ?? crypto.randomBytes(7).toString('hex');
@@ -325,6 +328,13 @@ export const POST = async (req: Request) => {
         { status: 400 },
       );
     }
+
+    const searchStartTime = Date.now();
+    chatLogger.info('Starting search and answer', { 
+      focusMode: body.focusMode,
+      optimizationMode: body.optimizationMode,
+      elapsedMs: Date.now() - requestStartTime 
+    });
 
     const stream = await handler.searchAndAnswer(
       message.content,

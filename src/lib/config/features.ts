@@ -17,7 +17,7 @@ export const isSearchPreferenceEnabled = isTruthy(
 );
 
 export const defaultChatModelKey =
-  process.env.NEXT_PUBLIC_DEFAULT_CHAT_MODEL_KEY ?? 'gpt-5-nano';
+  process.env.NEXT_PUBLIC_DEFAULT_CHAT_MODEL_KEY ?? 'gpt-4o-mini';
 
 export const isCopilotToggleEnabled = isTruthy(
   process.env.NEXT_PUBLIC_ENABLE_COPILOT_TOGGLE,

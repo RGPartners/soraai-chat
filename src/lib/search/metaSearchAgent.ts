@@ -112,7 +112,13 @@ class MetaSearchAgent implements MetaSearchAgentType {
 
           let docs: Document[] = [];
 
+          const docFetchStart = Date.now();
           const linkDocs = await getDocumentsFromLinks({ links });
+          searchLogger.info('Documents fetched from links', { 
+            durationMs: Date.now() - docFetchStart,
+            linkCount: links.length,
+            docCount: linkDocs.length
+          });
 
           const docGroups: Document[] = [];
 
@@ -146,8 +152,10 @@ class MetaSearchAgent implements MetaSearchAgentType {
             }
           });
 
+          const summarizeStart = Date.now();
           await Promise.all(
             docGroups.map(async (doc) => {
+              const docSummarizeStart = Date.now();
               const res = await llm.invoke(`
             You are a web search summarizer, tasked with summarizing a piece of text retrieved from a web search. Your job is to summarize the 
             text into a detailed, 2-4 paragraph explanation that captures the main ideas and provides a comprehensive answer to the query.
@@ -218,8 +226,16 @@ class MetaSearchAgent implements MetaSearchAgentType {
               });
 
               docs.push(document);
+              searchLogger.debug('Document summarized', { 
+                durationMs: Date.now() - docSummarizeStart,
+                url: doc.metadata.url 
+              });
             }),
           );
+          searchLogger.info('All documents summarized', { 
+            totalDurationMs: Date.now() - summarizeStart,
+            docCount: docGroups.length
+          });
 
           return { query: question, docs: docs };
         } else {
@@ -320,6 +336,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
     embeddings: Embeddings,
     optimizationMode: 'speed' | 'balanced' | 'quality',
   ) {
+    const rerankStart = Date.now();
     if (docs.length === 0 && fileIds.length === 0) {
       return docs;
     }
@@ -451,6 +468,12 @@ class MetaSearchAgent implements MetaSearchAgentType {
         .slice(0, 15)
         .map((sim) => docsWithContent[sim.index]);
 
+      searchLogger.info('Documents reranked', { 
+        durationMs: Date.now() - rerankStart,
+        mode: optimizationMode,
+        inputDocs: docsWithContent.length,
+        outputDocs: sortedDocs.length
+      });
       return sortedDocs;
     }
 
@@ -470,11 +493,20 @@ class MetaSearchAgent implements MetaSearchAgentType {
     stream: AsyncGenerator<StreamEvent, any, any>,
     emitter: eventEmitter,
   ) {
+    const streamStartTime = Date.now();
+    let sourcesEmittedTime: number | null = null;
+    let firstTokenTime: number | null = null;
+    
     for await (const event of stream) {
       if (
         event.event === 'on_chain_end' &&
         event.name === 'FinalSourceRetriever'
       ) {
+        sourcesEmittedTime = Date.now();
+        searchLogger.info('Sources retrieved', { 
+          durationMs: sourcesEmittedTime - streamStartTime,
+          sourceCount: Array.isArray(event.data.output) ? event.data.output.length : 0
+        });
         emitter.emit(
           'data',
           JSON.stringify({ type: 'sources', data: event.data.output }),
@@ -484,6 +516,13 @@ class MetaSearchAgent implements MetaSearchAgentType {
         event.event === 'on_chain_stream' &&
         event.name === 'FinalResponseGenerator'
       ) {
+        if (!firstTokenTime) {
+          firstTokenTime = Date.now();
+          searchLogger.info('First token generated', { 
+            durationMs: firstTokenTime - streamStartTime,
+            afterSourcesMs: sourcesEmittedTime ? firstTokenTime - sourcesEmittedTime : null
+          });
+        }
         emitter.emit(
           'data',
           JSON.stringify({ type: 'response', data: event.data.chunk }),
@@ -493,6 +532,12 @@ class MetaSearchAgent implements MetaSearchAgentType {
         event.event === 'on_chain_end' &&
         event.name === 'FinalResponseGenerator'
       ) {
+        const totalDuration = Date.now() - streamStartTime;
+        searchLogger.info('Response generation complete', { 
+          totalDurationMs: totalDuration,
+          sourcesMs: sourcesEmittedTime ? sourcesEmittedTime - streamStartTime : null,
+          firstTokenMs: firstTokenTime ? firstTokenTime - streamStartTime : null
+        });
         emitter.emit('end');
       }
     }
@@ -507,8 +552,12 @@ class MetaSearchAgent implements MetaSearchAgentType {
     fileIds: string[],
     systemInstructions: string,
   ) {
+    const startTime = Date.now();
+    searchLogger.info('searchAndAnswer started', { optimizationMode, fileCount: fileIds.length });
+    
     const emitter = new eventEmitter();
 
+    const chainBuildStart = Date.now();
     const answeringChain = await this.createAnsweringChain(
       llm,
       fileIds,
@@ -516,6 +565,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
       optimizationMode,
       systemInstructions,
     );
+    searchLogger.info('Answering chain built', { durationMs: Date.now() - chainBuildStart });
 
     const stream = answeringChain.streamEvents(
       {

@@ -8,12 +8,14 @@ import logger from '@/lib/logger';
 const documentsLogger = logger.withDefaults({ tag: 'utils:documents' });
 
 export const getDocumentsFromLinks = async ({ links }: { links: string[] }) => {
+  const startTime = Date.now();
   const splitter = new RecursiveCharacterTextSplitter();
 
   let docs: Document[] = [];
 
   await Promise.all(
     links.map(async (link) => {
+      const linkFetchStart = Date.now();
       link =
         link.startsWith('http://') || link.startsWith('https://')
           ? link
@@ -80,10 +82,15 @@ export const getDocumentsFromLinks = async ({ links }: { links: string[] }) => {
         });
 
         docs.push(...linkDocs);
+        documentsLogger.debug('Document fetched', { 
+          url: link, 
+          durationMs: Date.now() - linkFetchStart,
+          chunkCount: linkDocs.length
+        });
       } catch (err) {
         documentsLogger.error(
           'Failed to retrieve documents from link.',
-          err,
+          { err, url: link, durationMs: Date.now() - linkFetchStart },
         );
         docs.push(
           new Document({
@@ -97,6 +104,12 @@ export const getDocumentsFromLinks = async ({ links }: { links: string[] }) => {
       }
     }),
   );
+
+  documentsLogger.info('All documents fetched', {
+    linkCount: links.length,
+    totalChunks: docs.length,
+    totalDurationMs: Date.now() - startTime
+  });
 
   return docs;
 };

@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { getSearxngURL } from './config/serverRegistry';
+import logger from '@/lib/logger';
+
+const searxngLogger = logger.withDefaults({ tag: 'searxng' });
 
 interface SearxngSearchOptions {
   categories?: string[];
@@ -23,6 +26,7 @@ export const searchSearxng = async (
   query: string,
   opts?: SearxngSearchOptions,
 ) => {
+  const startTime = Date.now();
   const searxngURL = getSearxngURL();
 
   const url = new URL(`${searxngURL}/search?format=json`);
@@ -39,16 +43,28 @@ export const searchSearxng = async (
     });
   }
 
+  const fetchStart = Date.now();
   const res = await fetch(url, {
     headers: {
       'User-Agent': 'SoraAI/1.0 (+https://github.com/RGPartners/soraai-chat)',
       'X-Forwarded-For': '127.0.0.1',
     },
   });
+  const fetchDuration = Date.now() - fetchStart;
+  
   const data = await res.json();
+  const totalDuration = Date.now() - startTime;
 
   const results: SearxngSearchResult[] = data.results;
   const suggestions: string[] = data.suggestions;
+
+  searxngLogger.info('SearxNG search completed', {
+    query,
+    engines: opts?.engines,
+    resultCount: results.length,
+    fetchDurationMs: fetchDuration,
+    totalDurationMs: totalDuration
+  });
 
   return { results, suggestions };
 };
