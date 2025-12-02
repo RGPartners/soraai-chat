@@ -14,7 +14,6 @@ COPY src/lib/db/migrations ./src/lib/db/migrations
 
 ENV NEXT_STANDALONE_OUTPUT=1
 
-RUN mkdir -p /home/soraai/data
 RUN yarn build
 
 FROM node:24.5.0-slim
@@ -31,7 +30,6 @@ WORKDIR /home/soraai
 COPY --from=builder /home/soraai/public ./public
 COPY --from=builder /home/soraai/.next/static ./public/_next/static
 COPY --from=builder /home/soraai/.next/standalone ./
-COPY --from=builder /home/soraai/data ./data
 COPY --from=builder /home/soraai/src/lib/db/migrations ./src/lib/db/migrations
 
 RUN mkdir /home/soraai/uploads

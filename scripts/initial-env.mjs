@@ -65,27 +65,11 @@ const ensureDockerEnv = () => {
   }
 };
 
-const ensureDataDir = () => {
-  const dataDir = path.join(ROOT, 'data');
-  if (!fs.existsSync(dataDir)) {
-    try {
-      fs.mkdirSync(dataDir, { recursive: true });
-      logger.info('Created data directory at ./data');
-    } catch (error) {
-      logger.error('Failed to create ./data directory.', error);
-      return false;
-    }
-  }
-
-  return true;
-};
-
 const main = () => {
   const envReady = copyEnv();
   const dockerEnvReady = ensureDockerEnv();
-  const dataReady = ensureDataDir();
 
-  if (!envReady || !dockerEnvReady || !dataReady) {
+  if (!envReady || !dockerEnvReady) {
     process.exit(1);
   }
 };

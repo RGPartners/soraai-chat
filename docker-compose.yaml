@@ -4,12 +4,9 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - data:/home/soraai/data
       - uploads:/home/soraai/uploads
     restart: unless-stopped
 
 volumes:
-  data:
-    name: 'soraai-data'
   uploads:
     name: 'soraai-uploads'

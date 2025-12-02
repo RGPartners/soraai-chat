@@ -10,7 +10,7 @@ Simply pull the latest image and restart your container:
 docker pull rgpartners/soraai:latest
 docker stop soraai
 docker rm soraai
-docker run -d -p 3000:3000 -v soraai-data:/home/soraai/data -v soraai-uploads:/home/soraai/uploads --name soraai rgpartners/soraai:latest
+docker run -d -p 3000:3000 -v soraai-uploads:/home/soraai/uploads --name soraai rgpartners/soraai:latest
 ```
 
 For slim version:
@@ -19,7 +19,7 @@ For slim version:
 docker pull rgpartners/soraai:slim-latest
 docker stop soraai
 docker rm soraai
-docker run -d -p 3000:3000 -e SEARXNG_API_URL=https://your-searxng-url -v soraai-data:/home/soraai/data -v soraai-uploads:/home/soraai/uploads --name soraai rgpartners/soraai:slim-latest
+docker run -d -p 3000:3000 -e SEARXNG_API_URL=https://your-searxng-url -v soraai-uploads:/home/soraai/uploads --name soraai rgpartners/soraai:slim-latest
 ```
 
 Once updated, go to http://localhost:3000 and verify the latest changes. Your settings are preserved automatically.
