@@ -16,6 +16,9 @@ type ChatRecord = typeof chats.$inferSelect;
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+export const config = {
+  regions: ['iad1'],
+};
 
 const chatLogger = logger.withDefaults({ tag: 'api:chat' });
 
