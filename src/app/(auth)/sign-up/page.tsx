@@ -29,7 +29,9 @@ const resolveRedirectTarget = (next?: string) => {
 export default async function SignUpPage({ searchParams }: SignUpPageProps) {
   const session = await getSession();
 
-  if (session) {
+  const isAnonymousSession = Boolean(session?.user?.isAnonymous);
+
+  if (session && !isAnonymousSession) {
     redirect('/');
   }
 
