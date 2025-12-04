@@ -32,15 +32,24 @@ export default async function AppLayout({
   }
 
   const primaryRole = getPrimaryRole(session.user.role);
+  const isAnonymous = Boolean(session.user.isAnonymous);
+  const fallbackEmail = session.user.email ?? `${session.user.id}@guest.local`;
 
-  const syncedProfile = await syncUserProfileFromProviders(session.user);
+  const profile = isAnonymous
+    ? {
+        name: 'Guest',
+        email: fallbackEmail,
+        image: session.user.image ?? null,
+      }
+    : await syncUserProfileFromProviders(session.user);
 
   const currentUser = {
     id: session.user.id,
-    email: syncedProfile.email,
-    name: syncedProfile.name ?? syncedProfile.email,
+    email: profile.email,
+    name: profile.name ?? profile.email,
     role: primaryRole,
-    image: syncedProfile.image,
+    image: profile.image,
+    isAnonymous,
   };
 
   const canManageSettings =

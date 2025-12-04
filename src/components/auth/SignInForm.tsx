@@ -13,6 +13,7 @@ interface SignInFormProps {
   signUpEnabled: boolean;
   socialProviders: SocialAuthenticationProvider[];
   isFirstUser: boolean;
+  redirectTo?: string;
 }
 
 const SignInForm = ({
@@ -20,6 +21,7 @@ const SignInForm = ({
   signUpEnabled,
   socialProviders,
   isFirstUser,
+  redirectTo,
 }: SignInFormProps) => {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -28,6 +30,16 @@ const SignInForm = ({
   const [socialLoading, setSocialLoading] = useState<SocialAuthenticationProvider | null>(null);
 
   const showEmailForm = emailAndPasswordEnabled && !isFirstUser;
+  const redirectTarget = redirectTo?.startsWith('/') && !redirectTo.startsWith('//') ? redirectTo : '/';
+
+  const buildNextAwareHref = (path: string) => {
+    if (redirectTarget === '/' || redirectTarget === path) {
+      return path;
+    }
+
+    const search = new URLSearchParams({ next: redirectTarget }).toString();
+    return `${path}?${search}`;
+  };
 
   const handleEmailSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,9 +53,9 @@ const SignInForm = ({
       await authClient.signIn.email({
         email,
         password,
-        callbackURL: '/',
+        callbackURL: redirectTarget,
       });
-      router.push('/');
+      router.push(redirectTarget);
       router.refresh();
     } catch (error: any) {
       const message =
@@ -59,7 +71,7 @@ const SignInForm = ({
   const handleSocialSignIn = async (provider: SocialAuthenticationProvider) => {
     try {
       setSocialLoading(provider);
-      await authClient.signIn.social({ provider });
+      await authClient.signIn.social({ provider, callbackURL: redirectTarget });
     } catch (error: any) {
       const message = error?.error || error?.message || 'Unable to sign in.';
       toast.error(message);
@@ -162,7 +174,7 @@ const SignInForm = ({
         <p className="text-sm text-black/60 dark:text-white/60">
           {"Don't have an account?"}{' '}
           <Link
-            href="/sign-up"
+            href={buildNextAwareHref('/sign-up')}
             className="font-medium text-[#24A0ED] transition hover:underline"
           >
             Create one now.
