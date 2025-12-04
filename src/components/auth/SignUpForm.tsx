@@ -13,12 +13,14 @@ interface SignUpFormProps {
   emailAndPasswordEnabled: boolean;
   socialProviders: SocialAuthenticationProvider[];
   isFirstUser: boolean;
+  redirectTo?: string;
 }
 
 const SignUpForm = ({
   emailAndPasswordEnabled,
   socialProviders,
   isFirstUser,
+  redirectTo,
 }: SignUpFormProps) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -28,6 +30,17 @@ const SignUpForm = ({
     email: '',
     password: '',
   });
+
+  const redirectTarget = redirectTo?.startsWith('/') && !redirectTo.startsWith('//') ? redirectTo : '/';
+
+  const buildNextAwareHref = (path: string) => {
+    if (redirectTarget === '/' || redirectTarget === path) {
+      return path;
+    }
+
+    const search = new URLSearchParams({ next: redirectTarget }).toString();
+    return `${path}?${search}`;
+  };
 
   const handleInputChange = (
     field: 'name' | 'email' | 'password',
@@ -55,7 +68,7 @@ const SignUpForm = ({
       }
 
       toast.success(result.message ?? 'Account created successfully.');
-      router.push('/');
+      router.push(redirectTarget);
       router.refresh();
     });
   };
@@ -63,7 +76,7 @@ const SignUpForm = ({
   const handleSocialSignIn = async (provider: SocialAuthenticationProvider) => {
     try {
       setSocialLoading(provider);
-      await authClient.signIn.social({ provider });
+      await authClient.signIn.social({ provider, callbackURL: redirectTarget });
     } catch (error: any) {
       const message = error?.error || error?.message || 'Unable to continue.';
       toast.error(message);
@@ -182,7 +195,7 @@ const SignUpForm = ({
       <p className="text-sm text-black/60 dark:text-white/60">
         Already have an account?{' '}
         <Link
-          href="/sign-in"
+          href={buildNextAwareHref('/sign-in')}
           className="font-medium text-[#24A0ED] transition hover:underline"
         >
           Sign in

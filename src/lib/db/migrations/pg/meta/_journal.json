@@ -29,6 +29,13 @@
       "when": 1763959980000,
       "tag": "0003_add-mcp-tables",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1764600000000,
+      "tag": "0004_add-anonymous-flag",
+      "breakpoints": true
     }
   ]
 }
