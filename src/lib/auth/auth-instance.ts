@@ -1,12 +1,22 @@
 import { betterAuth, type BetterAuthOptions } from 'better-auth';
 import { admin as adminPlugin } from 'better-auth/plugins';
+import { anonymous as anonymousPlugin } from 'better-auth/plugins/anonymous';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
 import { headers } from 'next/headers';
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { pgDb } from '@/lib/db';
-import { accounts, sessions, users, verifications } from '@/lib/db/schema';
+import {
+  accounts,
+  chats,
+  mcpServerCustomInstructions,
+  mcpServers,
+  mcpToolCustomInstructions,
+  sessions,
+  users,
+  verifications,
+} from '@/lib/db/schema';
 import {
   getAuthConfig,
   type SocialAuthenticationProvider,
@@ -99,9 +109,52 @@ const options: BetterAuthOptions = {
   socialProviders: authConfig.socialProviders,
 };
 
+const authLogger = logger.withDefaults({ tag: 'auth' });
+const anonymousLogger = authLogger.withDefaults({ tag: 'auth:anonymous' });
+
 export const auth = betterAuth({
   ...options,
   plugins: [
+    anonymousPlugin({
+      emailDomainName: process.env.BETTER_AUTH_ANONYMOUS_EMAIL_DOMAIN,
+      generateName: async () => 'Guest',
+      async onLinkAccount({ anonymousUser, newUser }) {
+        const previousUserId = anonymousUser.user.id;
+        const nextUserId = newUser.user.id;
+
+        try {
+          await pgDb.transaction(async (tx) => {
+            await tx
+              .update(chats)
+              .set({ userId: nextUserId })
+              .where(eq(chats.userId, previousUserId));
+
+            await tx
+              .update(mcpServers)
+              .set({ userId: nextUserId })
+              .where(eq(mcpServers.userId, previousUserId));
+
+            await tx
+              .update(mcpServerCustomInstructions)
+              .set({ userId: nextUserId })
+              .where(eq(mcpServerCustomInstructions.userId, previousUserId));
+
+            await tx
+              .update(mcpToolCustomInstructions)
+              .set({ userId: nextUserId })
+              .where(eq(mcpToolCustomInstructions.userId, previousUserId));
+          });
+        } catch (error) {
+          anonymousLogger.error('Failed to migrate anonymous user data.', {
+            fromUserId: previousUserId,
+            toUserId: nextUserId,
+            error,
+          });
+
+          throw error;
+        }
+      },
+    }),
     adminPlugin({
       defaultRole: DEFAULT_USER_ROLE,
       adminRoles: [USER_ROLES.ADMIN],
@@ -116,14 +169,13 @@ export const auth = betterAuth({
   ],
 });
 
-const authLogger = logger.withDefaults({ tag: 'auth' });
-
 type AuthSessionBase = Awaited<ReturnType<typeof auth.api.getSession>>;
 type NonNullAuthSession = Extract<AuthSessionBase, { user: unknown }>;
 type SessionUserBase = NonNullAuthSession['user'];
 
 export type SessionUser = SessionUserBase & {
   role?: string | null;
+  isAnonymous?: boolean;
 };
 
 export type AuthSession =
