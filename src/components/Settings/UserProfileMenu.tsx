@@ -19,6 +19,7 @@ import {
   Command,
   Languages,
   LogOut,
+  LogIn,
   Moon,
   Bell,
   Palette,
@@ -54,6 +55,7 @@ type SidebarUser = {
   name: string | null;
   role: UserRole;
   image: string | null;
+  isAnonymous: boolean;
 };
 
 type TriggerRect = {
@@ -115,6 +117,7 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
   const tAuth = useTranslations('Auth');
   const tToasts = useTranslations('Toasts');
   const tRoles = useTranslations('Roles');
+  const isAnonymousUser = user.isAnonymous;
 
   const formatRole = useCallback(
     (role: UserRole) => {
@@ -124,6 +127,9 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
     },
     [tRoles],
   );
+
+  const displayName = user.name ?? (isAnonymousUser ? 'Guest' : user.email);
+  const roleLabel = isAnonymousUser ? 'Guest' : formatRole(user.role);
 
   const updateTriggerRect = useCallback(() => {
     if (typeof window === 'undefined') {
@@ -326,6 +332,16 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
     }
   };
 
+  const handleSignIn = () => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const currentLocation = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    const target = `/sign-in?next=${encodeURIComponent(currentLocation)}`;
+    router.push(target);
+  };
+
   const themeChoices: ThemeChoice[] = useMemo(
     () => [
       {
@@ -409,10 +425,10 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
           size="md"
         />
         <span className="hidden px-1 text-[10px] text-black/60 dark:text-white/60 lg:block">
-          {user.name ?? user.email}
+          {displayName}
         </span>
         <span className="hidden px-1 text-[9px] uppercase tracking-wide text-black/40 dark:text-white/40 lg:block">
-          {formatRole(user.role)}
+          {roleLabel}
         </span>
       </button>
 
@@ -451,13 +467,13 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
                 />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-black/80 dark:text-white/80">
-                    {user.name ?? user.email}
+                    {displayName}
                   </p>
                   <p className="text-xs text-black/50 dark:text-white/50">
                     {user.email}
                   </p>
                   <p className="text-xs text-black/40 dark:text-white/40">
-                    {formatRole(user.role)}
+                    {roleLabel}
                   </p>
                 </div>
               </div>
@@ -470,6 +486,17 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
                     onClick={() => {
                       closeMenu();
                       router.push('/admin');
+                    }}
+                  />
+                )}
+                {isAnonymousUser && (
+                  <MenuButton
+                    icon={LogIn}
+                    label="Sign in to save chats"
+                    description="Log in or create an account to keep this session."
+                    onClick={() => {
+                      closeMenu();
+                      handleSignIn();
                     }}
                   />
                 )}
@@ -594,22 +621,26 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
                     handleHelp();
                   }}
                 />
-                <MenuButton
-                  icon={Settings}
-                  label={tMenu('userSettings')}
-                  onClick={openAccountSettings}
-                />
+                {!isAnonymousUser && (
+                  <MenuButton
+                    icon={Settings}
+                    label={tMenu('userSettings')}
+                    onClick={openAccountSettings}
+                  />
+                )}
               </div>
 
               <div className="mt-3 border-t border-light-200/70 pt-3 dark:border-dark-200/70">
-                <MenuButton
-                  icon={LogOut}
-                  label={isSigningOut ? tAuth('signingOut') : tAuth('signOut')}
-                  onClick={() => {
-                    closeMenu();
-                    handleSignOut();
-                  }}
-                />
+                {!isAnonymousUser && (
+                  <MenuButton
+                    icon={LogOut}
+                    label={isSigningOut ? tAuth('signingOut') : tAuth('signOut')}
+                    onClick={() => {
+                      closeMenu();
+                      handleSignOut();
+                    }}
+                  />
+                )}
               </div>
             </motion.div>
           </motion.div>
@@ -628,11 +659,13 @@ const UserProfileMenu = ({ user, canManageSettings }: UserProfileMenuProps) => {
         )}
       </AnimatePresence>
 
-      <UserSettingsDialog
-        open={isAccountDialogOpen}
-        onClose={() => setIsAccountDialogOpen(false)}
-        user={user}
-      />
+      {!isAnonymousUser && (
+        <UserSettingsDialog
+          open={isAccountDialogOpen}
+          onClose={() => setIsAccountDialogOpen(false)}
+          user={user}
+        />
+      )}
     </>
   );
 };

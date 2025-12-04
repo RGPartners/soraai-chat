@@ -276,7 +276,9 @@ export const chatContext = createContext<ChatContext>({
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const params: { chatId: string } = useParams();
   const searchParams = useSearchParams();
-  const initialMessage = searchParams.get('q');
+  const initialMessageParam =
+    searchParams.get('q') ?? searchParams.get('initial');
+  const initialMessage = initialMessageParam?.trim() ?? null;
   const { data: session, isPending: isSessionPending } = authClient.useSession();
 
   const [chatId, setChatId] = useState<string | undefined>(params.chatId);

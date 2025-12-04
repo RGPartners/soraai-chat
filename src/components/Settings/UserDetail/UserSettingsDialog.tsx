@@ -27,6 +27,7 @@ type SidebarUser = {
   name: string | null;
   role: string;
   image: string | null;
+  isAnonymous?: boolean;
 };
 
 type DialogProps = {

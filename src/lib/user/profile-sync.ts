@@ -140,6 +140,14 @@ const isEmpty = (value: string | null | undefined) =>
 export const syncUserProfileFromProviders = async (
   sessionUser: SessionUser,
 ): Promise<SyncedUserProfile> => {
+  if (sessionUser.isAnonymous) {
+    return {
+      name: sessionUser.name ?? 'Guest',
+      email: sessionUser.email ?? `${sessionUser.id}@guest.local`,
+      image: sessionUser.image ?? null,
+    };
+  }
+
   const dbUser = await pgDb.query.users.findFirst({
     where: eq(users.id, sessionUser.id),
     columns: {

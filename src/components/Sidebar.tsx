@@ -17,6 +17,7 @@ type SidebarUser = {
   name: string | null;
   role: UserRole;
   image: string | null;
+  isAnonymous: boolean;
 };
 
 type SidebarProps = {
