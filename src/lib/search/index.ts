@@ -1,7 +1,9 @@
-import MetaSearchAgent from '@/lib/search/metaSearchAgent';
+import MetaSearchAgent, { MetaSearchAgentType } from '@/lib/search/metaSearchAgent';
+import EbmValidatorAgent from './ebmValidatorAgent';
+import { isEbmValidatorEnabled } from '../config/features';
 import prompts from '../prompts';
 
-export const searchHandlers: Record<string, MetaSearchAgent> = {
+const handlers: Record<string, MetaSearchAgentType> = {
   webSearch: new MetaSearchAgent({
     activeEngines: [],
     queryGeneratorPrompt: prompts.webSearchRetrieverPrompt,
@@ -57,3 +59,9 @@ export const searchHandlers: Record<string, MetaSearchAgent> = {
     searchWeb: true,
   }),
 };
+
+if (isEbmValidatorEnabled) {
+  handlers.ebmValidator = new EbmValidatorAgent();
+}
+
+export const searchHandlers = handlers;

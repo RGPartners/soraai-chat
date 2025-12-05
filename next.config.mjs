@@ -39,7 +39,15 @@ const nextConfig = {
     NEXT_PUBLIC_ENABLE_COPILOT_TOGGLE:
       process.env.COPILOT_TOGGLE ?? 'false',
   },
-  serverExternalPackages: ['pdf-parse'],
+  serverExternalPackages: ['pdf-parse', '@napi-rs/canvas'],
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push('@napi-rs/canvas');
+    }
+
+    return config;
+  },
 };
 
 const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts');

@@ -14,6 +14,7 @@ import {
   buildEmbeddingsKey,
   buildExtractedKey,
   buildOriginalKey,
+  buildPagesKey,
   writeJsonToStorage,
 } from '@/lib/storage/uploaded-files';
 import { getContentTypeFromFilename } from '@/lib/storage/file-storage/storage-utils';
@@ -86,16 +87,36 @@ export async function POST(req: Request) {
         await fs.writeFile(tempFilePath, buffer);
 
         let docs: Document[] = [];
+        let pageRecords: { pageNumber: number; text: string }[] = [];
         if (fileExtension === 'pdf') {
           const loader = new PDFLoader(tempFilePath);
           docs = await loader.load();
+          pageRecords = docs.map((doc, index) => ({
+            pageNumber:
+              (doc.metadata as Record<string, any>)?.pageNumber ??
+              (doc.metadata as Record<string, any>)?.loc?.pageNumber ??
+              index + 1,
+            text: doc.pageContent,
+          }));
         } else if (fileExtension === 'docx') {
           const loader = new DocxLoader(tempFilePath);
           docs = await loader.load();
+          pageRecords = [
+            {
+              pageNumber: 1,
+              text: docs.map((doc) => doc.pageContent).join('\n\n'),
+            },
+          ];
         } else if (fileExtension === 'txt') {
           const text = await fs.readFile(tempFilePath, 'utf-8');
           docs = [
             new Document({ pageContent: text, metadata: { title: file.name } }),
+          ];
+          pageRecords = [
+            {
+              pageNumber: 1,
+              text,
+            },
           ];
         }
 
@@ -113,6 +134,19 @@ export async function POST(req: Request) {
         await writeJsonToStorage(extractedKey, {
           title: file.name,
           contents: splitted.map((doc) => doc.pageContent),
+        });
+
+        if (pageRecords.length === 0) {
+          pageRecords = docs.map((doc, index) => ({
+            pageNumber: index + 1,
+            text: doc.pageContent,
+          }));
+        }
+
+        const pagesKey = buildPagesKey(fileId);
+        await writeJsonToStorage(pagesKey, {
+          title: file.name,
+          pages: pageRecords,
         });
 
         const embeddings = await model.embedDocuments(

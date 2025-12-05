@@ -108,31 +108,41 @@ const handleEmitterEvents = async (
 ) => {
   let receivedMessage = '';
   const aiMessageId = crypto.randomBytes(7).toString('hex');
+  let hasAssistantResponse = false;
+  let encounteredError = false;
+  let writerClosed = false;
+
+  const writeEvent = (payload: Record<string, unknown>) => {
+    if (writerClosed) {
+      return;
+    }
+    writer.write(encoder.encode(`${JSON.stringify(payload)}\n`));
+  };
+
+  const closeWriter = () => {
+    if (writerClosed) {
+      return;
+    }
+    writer.close();
+    writerClosed = true;
+  };
 
   stream.on('data', (data) => {
     const parsedData = JSON.parse(data);
     if (parsedData.type === 'response') {
-      writer.write(
-        encoder.encode(
-          JSON.stringify({
-            type: 'message',
-            data: parsedData.data,
-            messageId: aiMessageId,
-          }) + '\n',
-        ),
-      );
-
+      hasAssistantResponse = true;
+      writeEvent({
+        type: 'message',
+        data: parsedData.data,
+        messageId: aiMessageId,
+      });
       receivedMessage += parsedData.data;
     } else if (parsedData.type === 'sources') {
-      writer.write(
-        encoder.encode(
-          JSON.stringify({
-            type: 'sources',
-            data: parsedData.data,
-            messageId: aiMessageId,
-          }) + '\n',
-        ),
-      );
+      writeEvent({
+        type: 'sources',
+        data: parsedData.data,
+        messageId: aiMessageId,
+      });
 
       const sourceMessageId = crypto.randomBytes(7).toString('hex');
 
@@ -145,39 +155,54 @@ const handleEmitterEvents = async (
           createdAt: new Date(),
         })
         .execute();
+    } else if (parsedData.type === 'error') {
+      encounteredError = true;
+      writeEvent({
+        type: 'error',
+        data: parsedData.data,
+      });
+      closeWriter();
     }
   });
   stream.on('end', () => {
-    writer.write(
-      encoder.encode(
-        JSON.stringify({
-          type: 'messageEnd',
-        }) + '\n',
-      ),
-    );
-    writer.close();
+    if (encounteredError) {
+      closeWriter();
+      return;
+    }
 
-    db.insert(messagesSchema)
-      .values({
-        content: receivedMessage,
-        chatId: chatId,
-        messageId: aiMessageId,
-        role: 'assistant',
-        createdAt: new Date(),
-      })
-      .execute();
+    writeEvent({
+      type: 'messageEnd',
+      messageId: aiMessageId,
+    });
+    closeWriter();
+
+    if (hasAssistantResponse && receivedMessage.trim().length > 0) {
+      db.insert(messagesSchema)
+        .values({
+          content: receivedMessage,
+          chatId: chatId,
+          messageId: aiMessageId,
+          role: 'assistant',
+          createdAt: new Date(),
+        })
+        .execute();
+    }
   });
   stream.on('error', (data) => {
-    const parsedData = JSON.parse(data);
-    writer.write(
-      encoder.encode(
-        JSON.stringify({
-          type: 'error',
-          data: parsedData.data,
-        }),
-      ),
-    );
-    writer.close();
+    encounteredError = true;
+    let errorPayload: unknown;
+    try {
+      const parsedData = JSON.parse(data);
+      errorPayload = parsedData.data ?? parsedData;
+    } catch (err) {
+      errorPayload = data;
+    }
+
+    writeEvent({
+      type: 'error',
+      data: errorPayload,
+    });
+    closeWriter();
   });
 };
 

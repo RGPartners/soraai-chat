@@ -1,0 +1,60 @@
+template_name: generic_rra
+issuer: Rwanda Revenue Authority
+keywords:
+  - "SDC INFORMATION"
+  - "Powered by EBM v2"
+  - "Receipt Number"
+exclude_keywords: []
+options:
+  lowercase: true
+  remove_whitespace: false
+  decimal_separator: "."
+fields:
+  tin:
+    parser: regex
+    regex:
+      - '(?i)TIN\s*:?\s*(?<tin>\d{9,12})'
+    type: string
+    required: true
+  buyer_tin:
+    parser: regex
+    regex:
+      - '(?i)Client\s+TIN\s*:?\s*(?<buyer_tin>\d{9,12})'
+      - '(?i)TIN\s*:?\s*(?<buyer_tin>\d{9,12})'
+    type: string
+    group: last
+  invoice_number:
+    parser: regex
+    regex:
+      - '(?i)receipt\s*(?:no\.?|number)[:\s]*(?<invoice_number>[A-Z0-9\-/]+/[A-Z0-9\-/]+)'
+      - '(?i)(?:invoice|receipt)\s*(?:no\.?|number)[:\s]*(?<invoice_number>[A-Z0-9\-/]+)'
+    type: string
+    required: true
+  issue_date:
+    parser: regex
+    regex: '(?i)(issue\s*)?date[:\s]*(?<issue_date>\d{4}-\d{2}-\d{2}|\d{2}/\d{2}/\d{4})'
+    type: date
+  total_amount:
+    parser: regex
+    regex:
+      - '(?i)Total\s+Rwf\s*(?<total_amount>[0-9,\.]+)'
+      - '(?i)(total\s*(amount|payable|due))[:\s]*(?<total_amount>[0-9,\.]+)'
+    type: amount
+    required: true
+  vat_amount:
+    parser: regex
+    regex:
+      - '(?i)Total\s+Tax(?:-B)?\s*(?:Rwf)?\s*(?<vat_amount>[0-9,\.]+)'
+      - '(?i)VAT[:\s]*(?<vat_amount>[0-9,\.]+)'
+    type: amount
+  currency:
+    parser: regex
+    regex:
+      - 'total\s*(?<currency>[a-z]{3})\s*[0-9,\.]+'
+      - '(?<currency>[a-z]{3})\s*[0-9,\.]+\s*total'
+    type: string
+    group: first
+required_fields:
+  - tin
+  - invoice_number
+  - total_amount

@@ -1,12 +1,91 @@
-**Implementation Plan**
-- Close the storage gap by adding actions.ts, route.ts, and route.ts, exposing health checks and presigned uploads. They lean on `lib/file-storage` and need client hooks (e.g. `hooks/usePresignedUpload.ts`) plus a UI affordance in upload flows to display configuration errors.
-- Harden bootstrapping: update instrumentation.ts to `process.exit(1)` on migration failure, and expand load-env.ts (and the `load-env.mjs` entry) to mimic the upstream loader’s .env.local / `.env.{NODE_ENV}` cascade and non-destructive merges. Ensure every runtime/script import uses the unified loader.
-- Standardize logging by replacing remaining `console.*` usage in hot paths (route.ts, metaSearchAgent.ts, `lib/chains/*`, etc.) with `lib/logger`. Add minimal context tags so streaming logs stay readable.
-- Reintroduce quality tooling: port the Vitest suite scaffold (`vitest.config.ts`, `tests/**` smoke specs) and Playwright harness from better-chatbot, adjusting fixtures to our schema; bring over `.github/workflows/pr-check.yml`, `lint-and-type-check.yml`, and Husky/biome configs for pre-commit enforcement. Update package.json scripts (`test`, `test:e2e`, `lint:fix`, `check`) accordingly.
-- Upgrade container/deployment support: adapt compose.yml to include a Postgres service and app build, add helper scripts (`scripts/clean.ts`, `scripts/cleanup-all-test-data.ts`, `scripts/seed-test-users.ts`) targeting our tables, and document the flow in UPDATING.md.
-- Optional stretch goals once the above land: port the storage diagnostics UI (settings pane), adopt the richer MCP management if needed, and evaluate the i18n layer (`src/i18n`, message bundles) for future localization work.
+Optimizing tool selection...
 
-**Next Steps**
-1. Confirm priority order and assignees for each bullet.
-2. Spin a branch for the storage endpoints; once merged, tackle instrumentation/env loader together to avoid double restarts.
-3. Schedule time for the test/CI migration—expect a larger PR since it touches configs, scripts, and GitHub workflows.
+Searched for text `focus mode` (`**/src/**`), 6 results
+
+Searched for text `focusModes` (`**/src/**`), 3 results
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/components/MessageInputActions/Focus.tsx)
+
+Searched for files matching `**/useChat*`, 1 match
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/hooks/useChat.tsx#1-1), lines 1 to 400
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/app/api/chat/route.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/search/index.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/search/metaSearchAgent.ts#1-1), lines 1 to 400
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/storage/uploaded-files.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/actions.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/app/api)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/app/api/uploads)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/app/api/uploads/route.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/prompts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/prompts/index.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/app/api/search/route.ts#1-1), lines 1 to 200
+
+Searched for text `searchAndAnswer` (`**/src/lib/search/metaSearchAgent.ts`), 3 results
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/search/metaSearchAgent.ts#520-520), lines 520 to 587
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/storage/file-storage)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/storage/file-storage/index.ts)
+
+Searched for text `ENABLE_QR_VALIDATION`, 1 result
+
+Searched for text `qr` (`**/src/**`), 20 results
+
+Read [](file:///Users/princemensah/Documents/Perplexica/docs/architecture/README.md)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/docs/architecture/WORKING.md)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/utils/files.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/models/registry.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/components/MessageInput.tsx)
+
+Searched for text `sendMessage` (`**/src/lib/hooks/useChat.tsx`), 7 results
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/hooks/useChat.tsx#582-582), lines 582 to 820
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/config/features.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/config/clientRegistry.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/logger.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/constants/runtime.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/lib/utils/env.ts)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/components/MessageInputActions/Attach.tsx)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/strategy_and_steps.txt)
+
+Read [](file:///Users/princemensah/Documents/Perplexica/src/components/MessageSources.tsx)
+
+**EBM Validator Plan**
+- **Step 1 – Establish feature guardrails**: Wire `ENABLE_QR_VALIDATION` into the web app (e.g. expose through features.ts and gate focus-mode registration/UI) so the rollout can be toggled without redeploys. Confirm existing uploads (route.ts) still accept PDFs when the flag is off.
+- **Step 2 – Extend upload preprocessing**: After the current text/embedding splitter runs in route.ts, persist two more artifacts for PDFs: the page-level raw text (single concatenated string) and lightweight page metadata (`pages[].number`, `pages[].content`). Store them beside the current `*-extracted.json` (`buildExtractedKey`) so downstream validators can avoid re-reading the binary. This only runs for `.pdf`, short-circuit for other extensions.
+- **Step 3 – Build QR decoding utilities**: Add a Node-side helper under `src/lib/ebm/qrDecoder.ts` that downloads the original file (`serverFileStorage.download(buildOriginalKey(...))`), rasterizes each page (use `pdfjs-dist` + `canvas` or `@napi-rs/canvas` targeting 150–300 DPI tiers like qrscan), and tries multiple binarization strategies before calling `@zxing/library` to decode. Cache per-page results and emit structured data `{ page, payload, confidence, errors[] }`.
+- **Step 4 – Model EBM payload + templates**: Create `src/lib/ebm/types.ts` defining `EbmInvoicePayload`, `EbmInvoiceTextSnapshot`, and `EbmValidationResult` (field status, mismatches, warnings). Mirror invoice2data by introducing YAML/JSON templates in `src/lib/ebm/templates/` for common RRA layouts (regex for TIN, invoice number, totals, dates). Load via a `TemplateRegistry` helper that picks the first template whose `keywords` regex all match the text snapshot.
+- **Step 5 – Parse invoice text**: Implement `src/lib/ebm/textExtractor.ts` to normalize the upload text chunk array into a consistent string, strip headers/footers, and feed it into template-specific parsers. Reuse invoice2data ideas: use named capture groups for totals/quantities, support table aggregation (port minimal logic from tables.py to TypeScript for combining line-item sums), and coerce values through helper functions (`parseRwfAmount`, `parseRraDate`).
+- **Step 6 – Compare QR vs text**: Add `src/lib/ebm/validator.ts` that orchestrates QR decode + text parsing. It should normalize both data sets (trim whitespace, uppercase tax IDs, round currency to the rwandan franc) and produce `EbmValidationResult` with per-field verdicts (`match`, `mismatch`, `missing`). Include tolerance rules (e.g. VAT rounding ±1 RWF), record orphaned fields, and note which page each datum came from for traceability.
+- **Step 7 – Surface structured evidence**: Write a formatter that converts `EbmValidationResult` into `Document[]`-style sources so the UI carousel (MessageSources.tsx) can display links like `metadata.url: 'File'`, `metadata.title: 'QR vs PDF totals'`, and embed a short summary in `metadata.note`. Provide a JSON payload alongside the human text so future UI upgrades (tables, badges) can consume it without re-parsing prose.
+- **Step 8 – Create EBM search handler**: Introduce `src/lib/search/ebmValidatorAgent.ts` implementing `MetaSearchAgentType`. On `searchAndAnswer`, enforce that at least one PDF file is attached, run the validator, emit a `sources` event with the structured comparison, and then stream a model-generated narrative via a slim `ChatPromptTemplate` (system prompt in `src/lib/prompts/ebmValidator.ts`) that references the structured JSON. If validation fails early, emit an error event to the client and skip LLM invocation.
+- **Step 9 – Register new focus mode**: Update index.ts to export a `Record<string, MetaSearchAgentType>` and register `ebmValidator: new EbmValidatorAgent(...)`. Reflect it in the UI picker (Focus.tsx) with a descriptive icon (e.g. `ScanEye`) and copy (“Validate Rwanda EBM invoices”). Ensure `useChat` defaults remain unchanged but pass the selected mode to `/api/chat`.
+- **Step 10 – Chat backend adjustments**: In route.ts, keep existing streaming flow but allow handler-specific system instructions; forward attachment IDs so the EBM agent can fetch the PDFs. Handle the error case where the handler emits a validation failure by removing the placeholder assistant message and surfacing a toast via `messageHandler`.
+- **Step 11 – Observability and docs**: Add dedicated logging via `logger.withDefaults({ tag: 'ebm:validator' })` around QR decoding and field comparisons, emit metrics (duration, success rate) and attach them to the request log. Document the flow in SEARCH.md or a new `docs/architecture/EBM_VALIDATION.md`, including env vars, supported templates, and troubleshooting.
+- **Step 12 – Testing & QA**: Seed fixtures under `tests/fixtures/ebm/` with anonymized invoices (matching/mismatched). Write unit tests for QR decoder (mocking PDF pages), template parsing, and validator comparison logic. Add an integration spec hitting `/api/chat` with `focusMode: 'ebmValidator'` and a mock file storage layer. Finish with a manual QA checklist (upload success, mismatch messaging, flag off behavior) before enabling the feature flag in staging.
+
+Suggested next actions: 1) scope libraries (`pdfjs-dist`, `@zxing/library`, `canvas`) and update package.json; 2) prototype the validator module against real invoice samples; 3) wire the new focus mode behind the flag in both UI and handler registry.
