@@ -16,6 +16,14 @@ import {
 import { SiReddit, SiYoutube } from '@icons-pack/react-simple-icons';
 import { Fragment } from 'react';
 import { useChat } from '@/lib/hooks/useChat';
+import {
+  isAcademicFocusEnabled,
+  isEbmValidatorEnabled,
+  isRedditFocusEnabled,
+  isWolframFocusEnabled,
+  isWritingFocusEnabled,
+  isYoutubeFocusEnabled,
+} from '@/lib/config/features';
 
 const focusModes = [
   {
@@ -24,37 +32,61 @@ const focusModes = [
     description: 'Searches across all of the internet',
     icon: <Globe size={16} />,
   },
-  {
+];
+
+if (isAcademicFocusEnabled) {
+  focusModes.push({
     key: 'academicSearch',
     title: 'Academic',
     description: 'Search in published academic papers',
     icon: <SwatchBook size={16} />,
-  },
-  {
+  });
+}
+
+if (isWritingFocusEnabled) {
+  focusModes.push({
     key: 'writingAssistant',
     title: 'Writing',
     description: 'Chat without searching the web',
     icon: <Pencil size={16} />,
-  },
-  {
+  });
+}
+
+if (isWolframFocusEnabled) {
+  focusModes.push({
     key: 'wolframAlphaSearch',
     title: 'Wolfram Alpha',
     description: 'Computational knowledge engine',
     icon: <BadgePercent size={16} />,
-  },
-  {
+  });
+}
+
+if (isYoutubeFocusEnabled) {
+  focusModes.push({
     key: 'youtubeSearch',
     title: 'Youtube',
     description: 'Search and watch videos',
     icon: <SiYoutube className="h-[16px] w-auto mr-0.5" />,
-  },
-  {
+  });
+}
+
+if (isRedditFocusEnabled) {
+  focusModes.push({
     key: 'redditSearch',
     title: 'Reddit',
     description: 'Search for discussions and opinions',
     icon: <SiReddit className="h-[16px] w-auto mr-0.5" />,
-  },
-];
+  });
+}
+
+if (isEbmValidatorEnabled) {
+  focusModes.push({
+    key: 'ebmValidator',
+    title: 'EBM Validator',
+    description: 'Validate Rwanda EBM invoices from uploads',
+    icon: <ScanEye size={16} />,
+  });
+}
 
 const Focus = () => {
   const { focusMode, setFocusMode } = useChat();

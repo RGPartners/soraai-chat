@@ -16,6 +16,9 @@ export const buildExtractedKey = (fileId: string) =>
 export const buildEmbeddingsKey = (fileId: string) =>
   withPrefix(`${fileId}-embeddings.json`);
 
+export const buildPagesKey = (fileId: string) =>
+  withPrefix(`${fileId}-pages.json`);
+
 export const readJsonFromStorage = async <T>(key: string): Promise<T> => {
   const buffer = await serverFileStorage.download(key);
   return JSON.parse(buffer.toString('utf8')) as T;

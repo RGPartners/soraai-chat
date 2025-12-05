@@ -44,3 +44,8 @@ certificates
 strategy_and_steps.txt
 terminal_output.txt
 .vercel
+
+invoice2data/
+SalesReciept_SDC012004587_75.pdf
+qrcode_link.txt
+qrscan/

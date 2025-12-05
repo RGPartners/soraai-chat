@@ -67,7 +67,6 @@ export const users = pgTable('user', {
   password: text('password'),
   image: text('image'),
   role: text('role').notNull().default('user'),
-  isAnonymous: boolean('is_anonymous').notNull().default(false),
   createdAt: timestamp('created_at')
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
