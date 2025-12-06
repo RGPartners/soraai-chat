@@ -3,17 +3,17 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const BUILD_OUTPUT = process.env.NEXT_STANDALONE_OUTPUT ? 'standalone' : undefined;
 
 /** @type {import('next').NextConfig} */
-const TEMPLATE_GLOBS = ['./src/lib/ebm/templates/**/*', 'src/lib/ebm/templates/**/*'];
-const OUTPUT_TRACING_TARGETS = [
-  '/api/chat',
-  '/api/uploads',
-  'app/api/chat/route',
-  'app/api/uploads/route',
+const EBM_ASSET_GLOBS = [
+  './src/lib/ebm/templates/**/*',
+  'src/lib/ebm/templates/**/*',
+  './node_modules/pdfjs-dist/**/*',
+  'node_modules/pdfjs-dist/**/*',
 ];
+const OUTPUT_TRACING_TARGETS = ['/api/chat', '/api/uploads', 'app/api/chat/route', 'app/api/uploads/route'];
 
 const buildOutputFileTracingIncludes = () => {
   return OUTPUT_TRACING_TARGETS.reduce((acc, route) => {
-    acc[route] = TEMPLATE_GLOBS;
+    acc[route] = EBM_ASSET_GLOBS;
     return acc;
   }, /** @type {Record<string, string[]>} */ ({}));
 };
