@@ -57,7 +57,7 @@ const nextConfig = {
     NEXT_PUBLIC_ENABLE_COPILOT_TOGGLE:
       process.env.COPILOT_TOGGLE ?? 'false',
   },
-  serverExternalPackages: ['pdf-parse', '@napi-rs/canvas'],
+  serverExternalPackages: ['pdf-parse', '@napi-rs/canvas', 'pdfjs-dist'],
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = config.externals || [];
