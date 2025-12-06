@@ -5,75 +5,25 @@ import { createRateLimiter } from '@/lib/rate-limit';
 import logger from '@/lib/logger';
 
 const websitesForTopic = {
-  'policy-legislation': {
-    query: [
-      'IRS guidance update',
-      'tax legislation update',
-      'treasury tax policy statement',
-      'congress tax bill analysis',
-    ],
-    links: [
-      'irs.gov/newsroom',
-      'home.treasury.gov/news',
-      'taxfoundation.org',
-      'reuters.com/legal/government',
-    ],
+  tech: {
+    query: ['technology news', 'latest tech', 'AI', 'science and innovation'],
+    links: ['techcrunch.com', 'wired.com', 'theverge.com'],
   },
-  'corporate-international': {
-    query: [
-      'corporate tax planning news',
-      'OECD pillar two update',
-      'transfer pricing dispute',
-      'global tax reform analysis',
-    ],
-    links: [
-      'news.bloombergtax.com',
-      'tax.thomsonreuters.com/news',
-      'oecd.org/tax',
-      'kpmg.com',
-    ],
+  finance: {
+    query: ['finance news', 'economy', 'stock market', 'investing'],
+    links: ['bloomberg.com', 'cnbc.com', 'marketwatch.com'],
   },
-  'compliance-enforcement': {
-    query: [
-      'IRS enforcement action',
-      'tax court decision',
-      'tax compliance guidance',
-      'tax fraud investigation',
-    ],
-    links: [
-      'law360.com/tax-authority',
-      'taxnotes.com',
-      'justice.gov/tax',
-      'irs.gov/compliance',
-    ],
+  art: {
+    query: ['art news', 'culture', 'modern art', 'cultural events'],
+    links: ['artnews.com', 'hyperallergic.com', 'theartnewspaper.com'],
   },
-  'advisory-strategy': {
-    query: [
-      'tax strategy insights',
-      'M&A tax planning',
-      'tax technology transformation',
-      'pillar two readiness guidance',
-    ],
-    links: [
-      'deloitte.com',
-      'ey.com/en_us/tax',
-      'pwc.com/us/en/services/tax.html',
-      'bdo.com/insights/tax',
-    ],
+  sports: {
+    query: ['sports news', 'latest sports', 'cricket football tennis'],
+    links: ['espn.com', 'bbc.com/sport', 'skysports.com'],
   },
-  'personal-small-business': {
-    query: [
-      'small business tax deductions',
-      'IRS filing guidance',
-      'retirement tax planning tips',
-      'tax credits for small business',
-    ],
-    links: [
-      'irs.gov/newsroom',
-      'tax.thomsonreuters.com/news',
-      'forbes.com/taxes',
-      'accountingtoday.com/tag/taxes',
-    ],
+  entertainment: {
+    query: ['entertainment news', 'movies', 'TV shows', 'celebrities'],
+    links: ['hollywoodreporter.com', 'variety.com', 'deadline.com'],
   },
 };
 
@@ -106,8 +56,7 @@ export const GET = async (req: Request) => {
 
     const mode: 'normal' | 'preview' =
       (params.get('mode') as 'normal' | 'preview') || 'normal';
-    const topic: Topic =
-      (params.get('topic') as Topic) || 'policy-legislation';
+    const topic: Topic = (params.get('topic') as Topic) || 'tech';
 
     const limiterState = await discoverRateLimiter.limit(session.user.id);
     const headers = new Headers();
@@ -129,6 +78,13 @@ export const GET = async (req: Request) => {
     }
 
     const selectedTopic = websitesForTopic[topic];
+
+    if (!selectedTopic) {
+      return Response.json(
+        { message: 'Unknown discover topic' },
+        { status: 400, headers },
+      );
+    }
 
     let data = [];
 
