@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import YAML from 'yaml';
@@ -24,10 +25,24 @@ const DEFAULT_OPTIONS: Required<EbmTemplateOptions> = {
   replace: [],
 };
 
-const TEMPLATE_ROOT = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
-  'templates',
-);
+const resolveTemplateRoot = () => {
+  const moduleDir = path.dirname(fileURLToPath(import.meta.url));
+  const candidates = [
+    path.join(moduleDir, 'templates'),
+    path.join(process.cwd(), 'src/lib/ebm/templates'),
+    path.join(process.cwd(), '.next/server/src/lib/ebm/templates'),
+  ];
+
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  return path.join(moduleDir, 'templates');
+};
+
+const TEMPLATE_ROOT = resolveTemplateRoot();
 
 const combiningMarks = /[\u0300-\u036f]/g;
 
