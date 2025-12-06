@@ -6,33 +6,38 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import SmallNewsCard from '@/components/Discover/SmallNewsCard';
 import MajorNewsCard from '@/components/Discover/MajorNewsCard';
-import type { DiscoverArticle } from '@/lib/types/discover';
+export interface Discover {
+  title: string;
+  content: string;
+  url: string;
+  thumbnail: string;
+}
 
 const topics: { key: string; display: string }[] = [
   {
-    display: 'Policy & Legislation',
-    key: 'policy-legislation',
+    display: 'Tech & Science',
+    key: 'tech',
   },
   {
-    display: 'Corporate & International Tax',
-    key: 'corporate-international',
+    display: 'Finance',
+    key: 'finance',
   },
   {
-    display: 'Compliance & Enforcement',
-    key: 'compliance-enforcement',
+    display: 'Art & Culture',
+    key: 'art',
   },
   {
-    display: 'Advisory & Strategy',
-    key: 'advisory-strategy',
+    display: 'Sports',
+    key: 'sports',
   },
   {
-    display: 'Personal & Small Business Tax',
-    key: 'personal-small-business',
+    display: 'Entertainment',
+    key: 'entertainment',
   },
 ];
 
 const Page = () => {
-  const [discover, setDiscover] = useState<DiscoverArticle[] | null>(null);
+  const [discover, setDiscover] = useState<Discover[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTopic, setActiveTopic] = useState<string>(topics[0].key);
 
@@ -52,7 +57,7 @@ const Page = () => {
         throw new Error(data.message);
       }
 
-      data.blogs = data.blogs.filter((blog: DiscoverArticle) => blog.thumbnail);
+      data.blogs = data.blogs.filter((blog: Discover) => blog.thumbnail);
 
       setDiscover(data.blogs);
     } catch (err: any) {
