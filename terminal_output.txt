@@ -1,239 +1,600 @@
-(base) princemensah@princemensah-macbook-pro Perplexica % pnpm db:migrate
-
-> soraai-chat@1.0.0 db:migrate /Users/princemensah/Documents/Perplexica
-> node scripts/db-migrate.cjs
-
-⏳ Running PostgreSQL migrations...
-✅ PostgreSQL migrations completed in 7573 ms
-🚀 DB migration completed
-(base) princemensah@princemensah-macbook-pro Perplexica % pnpm dev       
+(base) princemensah@princemensah-macbook-pro Perplexica % pnpm dev
 
 > soraai-chat@1.0.0 dev /Users/princemensah/Documents/Perplexica
 > next dev
 
    ▲ Next.js 15.2.6
    - Local:        http://localhost:3000
-   - Network:      http://192.168.228.154:3000
+   - Network:      http://192.168.163.154:3000
    - Environments: .env.local, .env
 
  ✓ Starting...
- ✓ Compiled /instrumentation in 189ms (39 modules)
-ℹ Running database migrations...                                                                                           soraai 4:48:53 PM
+ ✓ Compiled /instrumentation in 188ms (39 modules)
+ℹ Running database migrations...                                                                                     soraai 1:37:12 PM
 ⏳ Running PostgreSQL migrations...
-✅ PostgreSQL migrations completed in 2493 ms
+✅ PostgreSQL migrations completed in 2090 ms
 🚀 DB migration completed
-✔ Database migrations completed successfully                                                                               soraai 4:48:56 PM
- ✓ Ready in 4.9s
- ✓ Compiled /middleware in 306ms (107 modules)
- ○ Compiling / ...
- ✓ Compiled / in 10.6s (12343 modules)
-⚙ Skipping provider Ollama because required environment variables are missing.                                             config 4:49:08 PM
-⚙ Skipping provider Anthropic because required environment variables are missing.                                          config 4:49:08 PM
-⚙ Skipping provider Google Gemini because required environment variables are missing.                                      config 4:49:08 PM
-⚙ Skipping provider Groq because required environment variables are missing.                                               config 4:49:08 PM
-⚙ Skipping provider Deepseek AI because required environment variables are missing.                                        config 4:49:08 PM
-⚙ Skipping provider AI/ML API because required environment variables are missing.                                          config 4:49:08 PM
-⚙ Skipping provider LM Studio because required environment variables are missing.                                          config 4:49:08 PM
-⚙ Skipping provider Lemonade because required environment variables are missing.                                           config 4:49:08 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:49:08 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:49:08 PM
- ✓ Compiled in 264ms (4726 modules)
+✔ Database migrations completed successfully                                                                         soraai 1:37:14 PM
+ ✓ Ready in 4.6s
  ○ Compiling /api/auth/[...all] ...
- GET / 200 in 15999ms
- ✓ Compiled /manifest.webmanifest in 6.3s (12352 modules)
- GET /manifest.webmanifest 200 in 2555ms
- ○ Compiling /_not-found ...
- GET /api/auth/get-session 200 in 7543ms
- ✓ Compiled /_not-found in 821ms (12356 modules)
- ✓ Compiled /api/providers in 0ms (7640 modules)
- ✓ Compiled in 1266ms (12359 modules)
- GET /api/auth/get-session 200 in 2091ms
-⚙ Skipping provider Ollama because required environment variables are missing.                                             config 4:49:19 PM
-⚙ Skipping provider Anthropic because required environment variables are missing.                                          config 4:49:19 PM
-⚙ Skipping provider Google Gemini because required environment variables are missing.                                      config 4:49:19 PM
-⚙ Skipping provider Groq because required environment variables are missing.                                               config 4:49:19 PM
-⚙ Skipping provider Deepseek AI because required environment variables are missing.                                        config 4:49:19 PM
-⚙ Skipping provider AI/ML API because required environment variables are missing.                                          config 4:49:19 PM
-⚙ Skipping provider LM Studio because required environment variables are missing.                                          config 4:49:19 PM
-⚙ Skipping provider Lemonade because required environment variables are missing.                                           config 4:49:19 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:49:19 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:49:19 PM
- GET /api/providers 200 in 2369ms
- GET /api/auth/get-session 200 in 15ms
- GET /icon.png 404 in 3216ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:49:19 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:49:19 PM
- GET /api/providers 200 in 6ms
- GET /api/auth/get-session 200 in 9ms
- GET /api/auth/get-session 200 in 4ms
- GET /api/auth/get-session 200 in 5ms
- GET /api/auth/get-session 200 in 6ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:49:19 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:49:19 PM
- GET /api/providers 200 in 15ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:49:19 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:49:19 PM
- GET /api/providers 200 in 6ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:49:19 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:49:19 PM
- GET /api/providers 200 in 4ms
- ○ Compiling /api/discover ...
- ✓ Compiled /api/weather in 1797ms (12376 modules)
-⚙ Skipping provider Ollama because required environment variables are missing.                                             config 4:49:22 PM
-⚙ Skipping provider Anthropic because required environment variables are missing.                                          config 4:49:22 PM
-⚙ Skipping provider Google Gemini because required environment variables are missing.                                      config 4:49:22 PM
-⚙ Skipping provider Groq because required environment variables are missing.                                               config 4:49:22 PM
-⚙ Skipping provider Deepseek AI because required environment variables are missing.                                        config 4:49:22 PM
-⚙ Skipping provider AI/ML API because required environment variables are missing.                                          config 4:49:22 PM
-⚙ Skipping provider LM Studio because required environment variables are missing.                                          config 4:49:22 PM
-⚙ Skipping provider Lemonade because required environment variables are missing.                                           config 4:49:22 PM
- POST /api/weather 200 in 2000ms
- POST /api/weather 200 in 2104ms
- GET /api/auth/get-session 200 in 46ms
-ℹ SearxNG search completed { query: 'site:irs.gov/newsroom IRS guidance update',                                          searxng 4:49:25 PM
-  engines: [ 'bing news' ],
-  resultCount: 0,
-  fetchDurationMs: 3265,
-  totalDurationMs: 3267 }
- GET /api/discover?mode=preview 200 in 5407ms
- GET /api/discover?mode=preview 200 in 4ms
- GET /api/auth/get-session 200 in 26ms
- GET /api/auth/get-session 200 in 24ms
- ○ Compiling /api/uploads ...
- ✓ Compiled /api/uploads in 1723ms (13241 modules)
-⚙ Skipping provider Ollama because required environment variables are missing.                                             config 4:49:47 PM
-⚙ Skipping provider Anthropic because required environment variables are missing.                                          config 4:49:47 PM
-⚙ Skipping provider Google Gemini because required environment variables are missing.                                      config 4:49:47 PM
-⚙ Skipping provider Groq because required environment variables are missing.                                               config 4:49:47 PM
-⚙ Skipping provider Deepseek AI because required environment variables are missing.                                        config 4:49:47 PM
-⚙ Skipping provider AI/ML API because required environment variables are missing.                                          config 4:49:47 PM
-⚙ Skipping provider LM Studio because required environment variables are missing.                                          config 4:49:47 PM
-⚙ Skipping provider Lemonade because required environment variables are missing.                                           config 4:49:47 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:49:48 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:49:48 PM
- GET /api/auth/get-session 200 in 41ms
- GET /api/auth/get-session 200 in 17ms
- GET /api/auth/get-session 200 in 69ms
- GET /api/auth/get-session 200 in 205ms
- GET /api/auth/get-session 200 in 88ms
- GET /api/auth/get-session 200 in 35ms
- GET /api/auth/get-session 200 in 10ms
- GET /api/auth/get-session 200 in 11ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:24 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:24 PM
- GET /api/providers 200 in 33ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:24 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:24 PM
- GET /api/providers 200 in 7ms
- GET /api/auth/get-session 200 in 7ms
- GET /api/auth/get-session 200 in 18ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:25 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:25 PM
- GET /api/providers 200 in 6ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:25 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:25 PM
- GET /api/providers 200 in 7ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:25 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:25 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:25 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:25 PM
+ ✓ Compiled /api/auth/[...all] in 2.7s (1001 modules)
+ GET /api/auth/get-session 200 in 3412ms
+ GET /api/auth/get-session 200 in 33ms
+ ✓ Compiled /middleware in 129ms (107 modules)
+ ○ Compiling /api/providers ...
+ ✓ Compiled /api/providers in 1613ms (1706 modules)
+⚙ Skipping provider Ollama because required environment variables are missing.                                       config 1:37:20 PM
+⚙ Skipping provider Anthropic because required environment variables are missing.                                    config 1:37:20 PM
+⚙ Skipping provider Google Gemini because required environment variables are missing.                                config 1:37:20 PM
+⚙ Skipping provider Groq because required environment variables are missing.                                         config 1:37:20 PM
+⚙ Skipping provider Deepseek AI because required environment variables are missing.                                  config 1:37:20 PM
+⚙ Skipping provider AI/ML API because required environment variables are missing.                                    config 1:37:20 PM
+⚙ Skipping provider LM Studio because required environment variables are missing.                                    config 1:37:20 PM
+⚙ Skipping provider Lemonade because required environment variables are missing.                                     config 1:37:20 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                     models:registry 1:37:20 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                  models:registry 1:37:20 PM
+ GET /api/providers 200 in 2105ms
+⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                     models:registry 1:37:20 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                  models:registry 1:37:20 PM
  GET /api/providers 200 in 3ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:25 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:25 PM
- GET /api/providers 200 in 30ms
-ℹ SearxNG search completed { query: 'site:irs.gov/newsroom IRS guidance update',                                          searxng 4:51:27 PM
+ ○ Compiling / ...
+ ✓ Compiled / in 10.9s (12353 modules)
+⚙ Skipping provider Ollama because required environment variables are missing.                                       config 1:37:55 PM
+⚙ Skipping provider Anthropic because required environment variables are missing.                                    config 1:37:55 PM
+⚙ Skipping provider Google Gemini because required environment variables are missing.                                config 1:37:55 PM
+⚙ Skipping provider Groq because required environment variables are missing.                                         config 1:37:55 PM
+⚙ Skipping provider Deepseek AI because required environment variables are missing.                                  config 1:37:55 PM
+⚙ Skipping provider AI/ML API because required environment variables are missing.                                    config 1:37:55 PM
+⚙ Skipping provider LM Studio because required environment variables are missing.                                    config 1:37:55 PM
+⚙ Skipping provider Lemonade because required environment variables are missing.                                     config 1:37:55 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                     models:registry 1:37:55 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                  models:registry 1:37:55 PM
+ ✓ Compiled in 1432ms (4727 modules)
+ GET / 200 in 13525ms
+ GET /api/auth/get-session 200 in 52ms
+⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                     models:registry 1:37:58 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                  models:registry 1:37:58 PM
+ GET /api/providers 200 in 50ms
+ ○ Compiling /manifest.webmanifest ...
+ ✓ Compiled /discover in 4.9s (12452 modules)
+ ✓ Compiled in 2s (4738 modules)
+ GET /manifest.webmanifest 200 in 8646ms
+⚙ Skipping provider Ollama because required environment variables are missing.                                       config 1:38:07 PM
+⚙ Skipping provider Anthropic because required environment variables are missing.                                    config 1:38:07 PM
+⚙ Skipping provider Google Gemini because required environment variables are missing.                                config 1:38:07 PM
+⚙ Skipping provider Groq because required environment variables are missing.                                         config 1:38:07 PM
+⚙ Skipping provider Deepseek AI because required environment variables are missing.                                  config 1:38:07 PM
+⚙ Skipping provider AI/ML API because required environment variables are missing.                                    config 1:38:07 PM
+⚙ Skipping provider LM Studio because required environment variables are missing.                                    config 1:38:07 PM
+⚙ Skipping provider Lemonade because required environment variables are missing.                                     config 1:38:07 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                     models:registry 1:38:07 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                  models:registry 1:38:07 PM
+ GET /api/providers 200 in 8563ms
+ GET /api/auth/get-session 200 in 6961ms
+ GET /discover 200 in 4700ms
+⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                     models:registry 1:38:07 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                  models:registry 1:38:07 PM
+ GET /api/providers 200 in 32ms
+ ○ Compiling /_not-found ...
+ POST /api/weather 200 in 8901ms
+ POST /api/weather 200 in 8902ms
+ ✓ Compiled /_not-found in 1429ms (12509 modules)
+ GET /manifest.webmanifest 200 in 1122ms
+⚙ Skipping provider Ollama because required environment variables are missing.                                       config 1:38:10 PM
+⚙ Skipping provider Anthropic because required environment variables are missing.                                    config 1:38:10 PM
+⚙ Skipping provider Google Gemini because required environment variables are missing.                                config 1:38:10 PM
+⚙ Skipping provider Groq because required environment variables are missing.                                         config 1:38:10 PM
+⚙ Skipping provider Deepseek AI because required environment variables are missing.                                  config 1:38:10 PM
+⚙ Skipping provider AI/ML API because required environment variables are missing.                                    config 1:38:10 PM
+⚙ Skipping provider LM Studio because required environment variables are missing.                                    config 1:38:10 PM
+⚙ Skipping provider Lemonade because required environment variables are missing.                                     config 1:38:10 PM
+ℹ SearxNG search completed { query: 'site:techcrunch.com technology news',                                          searxng 1:38:10 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 2685,
+  totalDurationMs: 2686 }
+ GET /api/discover?mode=preview 200 in 11253ms
+ GET /discover 200 in 1556ms
+ GET /icon.png 404 in 2549ms
+ GET /icon.png 404 in 31ms
+ GET /api/discover?mode=preview 200 in 4ms
+ GET /manifest.webmanifest 200 in 14ms
+ GET /icon.png 404 in 48ms
+ℹ SearxNG search completed { query: 'site:wired.com artificial intelligence',                                       searxng 1:38:11 PM
+  engines: [ 'bing news' ],
+  resultCount: 8,
+  fetchDurationMs: 1209,
+  totalDurationMs: 1214 }
+ℹ SearxNG search completed { query: 'site:techcrunch.com artificial intelligence',                                  searxng 1:38:11 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 1213,
+  totalDurationMs: 1217 }
+ℹ SearxNG search completed { query: 'site:techcrunch.com latest tech',                                              searxng 1:38:11 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 1214,
+  totalDurationMs: 1218 }
+ GET /api/discover?topic=tech 200 in 2765ms
+ℹ SearxNG search completed { query: 'site:wired.com science innovation',                                            searxng 1:38:11 PM
+  engines: [ 'bing news' ],
+  resultCount: 9,
+  fetchDurationMs: 1533,
+  totalDurationMs: 1533 }
+ℹ SearxNG search completed { query: 'site:techcrunch.com technology news',                                          searxng 1:38:11 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 1641,
+  totalDurationMs: 1644 }
+ℹ SearxNG search completed { query: 'site:theverge.com artificial intelligence',                                    searxng 1:38:11 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 1636,
+  totalDurationMs: 1641 }
+ℹ SearxNG search completed { query: 'site:wired.com technology news',                                               searxng 1:38:11 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 1645,
+  totalDurationMs: 1647 }
+ℹ SearxNG search completed { query: 'site:theverge.com science innovation',                                         searxng 1:38:12 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 2107,
+  totalDurationMs: 2109 }
+ℹ SearxNG search completed { query: 'site:theverge.com latest tech',                                                searxng 1:38:12 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 2117,
+  totalDurationMs: 2117 }
+ℹ SearxNG search completed { query: 'site:theverge.com technology news',                                            searxng 1:38:12 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 2109,
+  totalDurationMs: 2126 }
+ℹ SearxNG search completed { query: 'site:wired.com latest tech',                                                   searxng 1:38:12 PM
+  engines: [ 'bing news' ],
+  resultCount: 10,
+  fetchDurationMs: 2128,
+  totalDurationMs: 2129 }
+ℹ SearxNG search completed { query: 'site:techcrunch.com science innovation',                                       searxng 1:38:12 PM
+  engines: [ 'bing news' ],
+  resultCount: 8,
+  fetchDurationMs: 2528,
+  totalDurationMs: 2530 }
+
+ ERROR  Failed to resolve discover feed. fetch failed                                                           api:discover 1:38:21 PM
+
+    at node:internal/deps/undici/undici:15433:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:473:9)
+    at async fetchHtml (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/rraPolicy.ts:20:22)
+    at async fetchRraPolicyDocuments (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/rraPolicy.ts:68:30)
+    at async Promise.all (index 0)
+    at async tech (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/topicPipelines.ts:44:91)
+    at async GET (webpack-internal:///(rsc)/./src/app/api/discover/route.ts:225:24)
+    at async AppRouteRouteModule.do (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:33891)
+    at async AppRouteRouteModule.handle (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:41254)
+    at async doRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1513:42)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1915:28)
+    at async DevServer.renderPageComponent (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2393:24)
+    at async DevServer.renderToResponseImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2430:32)
+    at async DevServer.pipeImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1003:25)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/next-server.js:304:17)
+    at async DevServer.handleRequestImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:895:17)
+    at async node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:371:20
+    at async Span.traceAsyncFn (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:368:24)
+    at async invokeRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:235:21)
+    at async handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:426:24)
+    at async requestHandlerImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:450:13)
+    at async Server.requestListener (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/start-server.js:158:13)
+
+  [cause]: Connect Timeout Error (attempted address: www.rra.gov.rw:443, timeout: 10000ms)
+
+      at onConnectTimeout (node:internal/deps/undici/undici:1532:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1513:11)
+      at process.processImmediate (node:internal/timers:505:21)
+
+ GET /api/discover?topic=tech&country=rwanda 500 in 10270ms
+ GET /api/auth/get-session 200 in 66ms
+
+ ERROR  Failed to resolve discover feed. fetch failed                                                           api:discover 1:38:38 PM
+
+    at node:internal/deps/undici/undici:15433:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:473:9)
+    at async fetchRraNewsArticles (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/rraNews.ts:43:22)
+    at async Promise.all (index 0)
+    at async finance (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/topicPipelines.ts:68:70)
+    at async GET (webpack-internal:///(rsc)/./src/app/api/discover/route.ts:225:24)
+    at async AppRouteRouteModule.do (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:33891)
+    at async AppRouteRouteModule.handle (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:41254)
+    at async doRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1513:42)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1915:28)
+    at async DevServer.renderPageComponent (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2393:24)
+    at async DevServer.renderToResponseImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2430:32)
+    at async DevServer.pipeImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1003:25)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/next-server.js:304:17)
+    at async DevServer.handleRequestImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:895:17)
+    at async node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:371:20
+    at async Span.traceAsyncFn (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:368:24)
+    at async invokeRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:235:21)
+    at async handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:426:24)
+    at async requestHandlerImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:450:13)
+    at async Server.requestListener (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/start-server.js:158:13)
+
+  [cause]: Connect Timeout Error (attempted address: www.rra.gov.rw:443, timeout: 10000ms)
+
+      at onConnectTimeout (node:internal/deps/undici/undici:1532:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1513:11)
+      at process.processImmediate (node:internal/timers:505:21)
+
+ GET /api/discover?topic=finance&country=rwanda 500 in 10529ms
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en deal activity Rwanda',                                      searxng 1:38:48 PM
   engines: [ 'bing news' ],
   resultCount: 0,
-  fetchDurationMs: 1931,
-  totalDurationMs: 1934 }
- GET /api/discover?mode=preview 200 in 1967ms
- GET / 200 in 2248ms
- GET /api/discover?mode=preview 200 in 3ms
- POST /api/uploads 200 in 101727ms
- POST /api/weather 200 in 1419ms
- GET /api/auth/get-session 200 in 6ms
- POST /api/weather 200 in 1657ms
- GET /manifest.webmanifest 200 in 11ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:28 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:28 PM
- GET /api/providers 200 in 6ms
- GET /icon.png 404 in 43ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:28 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:28 PM
- GET /api/providers 200 in 11ms
- GET /api/discover?mode=preview 200 in 12ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:28 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:28 PM
- GET /api/providers 200 in 5ms
- GET /api/discover?mode=preview 200 in 7ms
- POST /api/weather 200 in 188ms
- POST /api/weather 200 in 167ms
- GET /api/auth/get-session 200 in 30ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:51:41 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:51:41 PM
- POST /api/uploads 200 in 12221ms
- POST /api/weather 200 in 656ms
- POST /api/weather 200 in 192ms
- ○ Compiling /api/chat ...
- ✓ Compiled /api/chat in 2.8s (13803 modules)
-⚙ Skipping provider Ollama because required environment variables are missing.                                             config 4:52:21 PM
-⚙ Skipping provider Anthropic because required environment variables are missing.                                          config 4:52:21 PM
-⚙ Skipping provider Google Gemini because required environment variables are missing.                                      config 4:52:21 PM
-⚙ Skipping provider Groq because required environment variables are missing.                                               config 4:52:21 PM
-⚙ Skipping provider Deepseek AI because required environment variables are missing.                                        config 4:52:21 PM
-⚙ Skipping provider AI/ML API because required environment variables are missing.                                          config 4:52:21 PM
-⚙ Skipping provider LM Studio because required environment variables are missing.                                          config 4:52:21 PM
-⚙ Skipping provider Lemonade because required environment variables are missing.                                           config 4:52:21 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:52:23 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:52:23 PM
-⚙ Loading models with providers. { chatProviderId: 'openai-0c69f1f3',                                                    api:chat 4:52:23 PM
-  embeddingProviderId: 'openai-0c69f1f3',
-  chatModelKey: 'gpt-4o-mini',
-  embeddingModelKey: 'text-embedding-3-small' }
-ℹ Models loaded { durationMs: 1 }                                                                                        api:chat 4:52:23 PM
-ℹ Starting search and answer { focusMode: 'ebmValidator', optimizationMode: 'speed', elapsedMs: 1073 }                   api:chat 4:52:23 PM
-ℹ Starting EBM validation run. { messageLength: 22, historyTurns: 0, fileCount: 1 }                              search:ebm-agent 4:52:23 PM
- GET /api/auth/get-session 200 in 57ms
- POST /api/weather 200 in 715ms
-⚙ Matched snapshot with template. { template: 'generic_rra' }                                                            ebm:text 4:52:28 PM
-ℹ Detected QR code { page: 1, scale: 1.4, durationMs: '180.2' }                                                            ebm:qr 4:52:31 PM
-ℹ QR extraction finished { pageCount: 1, matches: 1, durationMs: '304.3' }                                                 ebm:qr 4:52:31 PM
- GET /api/auth/get-session 200 in 14ms
-ℹ EBM validation completed successfully. { fileId: '92a8834ed2e655269ca98162897ee3d5',                           search:ebm-agent 4:52:37 PM
-  summary: 'Invoice validation reported issues.' }
- POST /api/chat 200 in 20073ms
- ○ Compiling /api/suggestions ...
- ✓ Compiled /api/suggestions in 1318ms (13794 modules)
-⚙ Skipping provider Ollama because required environment variables are missing.                                             config 4:52:39 PM
-⚙ Skipping provider Anthropic because required environment variables are missing.                                          config 4:52:39 PM
-⚙ Skipping provider Google Gemini because required environment variables are missing.                                      config 4:52:39 PM
-⚙ Skipping provider Groq because required environment variables are missing.                                               config 4:52:39 PM
-⚙ Skipping provider Deepseek AI because required environment variables are missing.                                        config 4:52:39 PM
-⚙ Skipping provider AI/ML API because required environment variables are missing.                                          config 4:52:39 PM
-⚙ Skipping provider LM Studio because required environment variables are missing.                                          config 4:52:39 PM
-⚙ Skipping provider Lemonade because required environment variables are missing.                                           config 4:52:39 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:52:39 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:52:39 PM
- GET /api/auth/get-session 200 in 14ms
- POST /api/suggestions 200 in 3407ms
- POST /api/weather 200 in 646ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:52:56 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:52:56 PM
-⚙ Loading models with providers. { chatProviderId: 'openai-0c69f1f3',                                                    api:chat 4:52:56 PM
-  embeddingProviderId: 'openai-0c69f1f3',
-  chatModelKey: 'gpt-4o-mini',
-  embeddingModelKey: 'text-embedding-3-small' }
-ℹ Models loaded { durationMs: 2 }                                                                                        api:chat 4:52:56 PM
-ℹ Starting search and answer { focusMode: 'ebmValidator', optimizationMode: 'speed', elapsedMs: 1030 }                   api:chat 4:52:56 PM
-ℹ Starting EBM validation run. { messageLength: 22, historyTurns: 0, fileCount: 1 }                              search:ebm-agent 4:52:56 PM
-⚙ Matched snapshot with template. { template: 'generic_rra' }                                                            ebm:text 4:53:05 PM
-ℹ Detected QR code { page: 1, scale: 1.4, durationMs: '193.3' }                                                            ebm:qr 4:53:09 PM
-ℹ QR extraction finished { pageCount: 1, matches: 1, durationMs: '204.0' }                                                 ebm:qr 4:53:09 PM
- GET /api/auth/get-session 200 in 56ms
-ℹ EBM validation completed successfully. { fileId: '92a8834ed2e655269ca98162897ee3d5',                           search:ebm-agent 4:53:16 PM
-  summary: 'Invoice validation reported issues.' }
- POST /api/chat 200 in 20621ms
-⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                           models:registry 4:53:16 PM
-⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                        models:registry 4:53:16 PM
- POST /api/suggestions 200 in 9ms
- GET /api/auth/get-session 200 in 10ms
+  fetchDurationMs: 2537,
+  totalDurationMs: 2538 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en transfer pricing Rwanda',                                   searxng 1:38:48 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 2540,
+  totalDurationMs: 2541 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en tax insight Rwanda',                                        searxng 1:38:48 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 2552,
+  totalDurationMs: 2553 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en investment advisory Rwanda',                                searxng 1:38:48 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 2983,
+  totalDurationMs: 2985 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en budget analysis Rwanda',                                    searxng 1:38:48 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3016,
+  totalDurationMs: 3023 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en regulatory update Rwanda',                                  searxng 1:38:48 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3021,
+  totalDurationMs: 3023 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en business climate Rwanda',                                   searxng 1:38:49 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3417,
+  totalDurationMs: 3418 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en economic outlook Rwanda',                                   searxng 1:38:49 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3419,
+  totalDurationMs: 3420 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en finance advisory Rwanda',                                   searxng 1:38:49 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3472,
+  totalDurationMs: 3510 }
+ GET /api/auth/get-session 200 in 81ms
+
+ ERROR  Failed to resolve discover feed. fetch failed                                                           api:discover 1:38:56 PM
+
+    at node:internal/deps/undici/undici:15433:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:473:9)
+    at async fetchHtml (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:121:17)
+    at async fetchKifcNews (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:240:18)
+    at async fetchKifcAdvisoryInsights (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:309:25)
+    at async Promise.all (index 0)
+    at async art (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/topicPipelines.ts:102:58)
+    at async GET (webpack-internal:///(rsc)/./src/app/api/discover/route.ts:225:24)
+    at async AppRouteRouteModule.do (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:33891)
+    at async AppRouteRouteModule.handle (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:41254)
+    at async doRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1513:42)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1915:28)
+    at async DevServer.renderPageComponent (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2393:24)
+    at async DevServer.renderToResponseImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2430:32)
+    at async DevServer.pipeImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1003:25)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/next-server.js:304:17)
+    at async DevServer.handleRequestImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:895:17)
+    at async node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:371:20
+    at async Span.traceAsyncFn (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:368:24)
+    at async invokeRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:235:21)
+    at async handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:426:24)
+    at async requestHandlerImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:450:13)
+    at async Server.requestListener (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/start-server.js:158:13)
+
+  [cause]: Connect Timeout Error (attempted address: kifc.rw:443, timeout: 10000ms)
+
+      at onConnectTimeout (node:internal/deps/undici/undici:1532:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1513:11)
+      at process.processImmediate (node:internal/timers:505:21)
+
+ GET /api/discover?topic=art&country=rwanda 500 in 10550ms
+
+ ERROR  Failed to resolve discover feed. fetch failed                                                           api:discover 1:39:08 PM
+
+    at node:internal/deps/undici/undici:15433:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:473:9)
+    at async fetchRraNewsArticles (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/rraNews.ts:43:22)
+    at async Promise.all (index 0)
+    at async sports (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/topicPipelines.ts:127:85)
+    at async GET (webpack-internal:///(rsc)/./src/app/api/discover/route.ts:225:24)
+    at async AppRouteRouteModule.do (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:33891)
+    at async AppRouteRouteModule.handle (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:41254)
+    at async doRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1513:42)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1915:28)
+    at async DevServer.renderPageComponent (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2393:24)
+    at async DevServer.renderToResponseImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2430:32)
+    at async DevServer.pipeImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1003:25)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/next-server.js:304:17)
+    at async DevServer.handleRequestImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:895:17)
+    at async node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:371:20
+    at async Span.traceAsyncFn (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:368:24)
+    at async invokeRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:235:21)
+    at async handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:426:24)
+    at async requestHandlerImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:450:13)
+    at async Server.requestListener (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/start-server.js:158:13)
+
+  [cause]: Connect Timeout Error (attempted address: www.rra.gov.rw:443, timeout: 10000ms)
+
+      at onConnectTimeout (node:internal/deps/undici/undici:1532:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1513:11)
+      at process.processImmediate (node:internal/timers:505:21)
+
+ GET /api/discover?topic=sports&country=rwanda 500 in 10562ms
+ GET /api/discover?topic=entertainment&country=rwanda 200 in 7686ms
+ GET /api/discover?topic=sports&country=rwanda 200 in 1046ms
+ GET /api/discover?topic=art&country=rwanda 200 in 972ms
+
+ ERROR  Failed to resolve discover feed. fetch failed                                                           api:discover 1:39:25 PM
+
+    at node:internal/deps/undici/undici:15433:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:473:9)
+    at async fetchHtml (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:121:17)
+    at async fetchKifcResourcesPageDocuments (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:159:18)
+    at async Promise.all (index 0)
+    at async fetchKifcPolicyDocuments (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:216:39)
+    at async Promise.all (index 0)
+    at async entertainment (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/topicPipelines.ts:167:53)
+    at async GET (webpack-internal:///(rsc)/./src/app/api/discover/route.ts:225:24)
+    at async AppRouteRouteModule.do (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:33891)
+    at async AppRouteRouteModule.handle (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:41254)
+    at async doRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1513:42)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1915:28)
+    at async DevServer.renderPageComponent (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2393:24)
+    at async DevServer.renderToResponseImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2430:32)
+    at async DevServer.pipeImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1003:25)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/next-server.js:304:17)
+    at async DevServer.handleRequestImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:895:17)
+    at async node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:371:20
+    at async Span.traceAsyncFn (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:368:24)
+    at async invokeRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:235:21)
+    at async handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:426:24)
+    at async requestHandlerImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:450:13)
+    at async Server.requestListener (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/start-server.js:158:13)
+
+  [cause]: Connect Timeout Error (attempted address: kifc.rw:443, timeout: 10000ms)
+
+      at onConnectTimeout (node:internal/deps/undici/undici:1532:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1513:11)
+      at process.processImmediate (node:internal/timers:505:21)
+
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en investment advisory Rwanda',                                searxng 1:39:26 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 2565,
+  totalDurationMs: 2567 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en regulatory update Rwanda',                                  searxng 1:39:26 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 2573,
+  totalDurationMs: 2574 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en tax insight Rwanda',                                        searxng 1:39:26 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 2683,
+  totalDurationMs: 2685 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en finance advisory Rwanda',                                   searxng 1:39:26 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 2695,
+  totalDurationMs: 2696 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en transfer pricing Rwanda',                                   searxng 1:39:26 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3008,
+  totalDurationMs: 3061 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en budget analysis Rwanda',                                    searxng 1:39:26 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3070,
+  totalDurationMs: 3070 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en business climate Rwanda',                                   searxng 1:39:26 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3117,
+  totalDurationMs: 3119 }
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en deal activity Rwanda',                                      searxng 1:39:26 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3115,
+  totalDurationMs: 3116 }
+ GET /api/discover?topic=finance&country=rwanda 200 in 2201ms
+ℹ SearxNG search completed { query: 'site:pwc.com/rw/en economic outlook Rwanda',                                   searxng 1:39:27 PM
+  engines: [ 'bing news' ],
+  resultCount: 0,
+  fetchDurationMs: 3404,
+  totalDurationMs: 3405 }
+
+ ERROR  Failed to resolve discover feed. fetch failed                                                           api:discover 1:39:32 PM
+
+    at node:internal/deps/undici/undici:15433:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:473:9)
+    at async fetchRraNewsArticles (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/rraNews.ts:43:22)
+    at async Promise.all (index 0)
+    at async sports (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/topicPipelines.ts:127:85)
+    at async GET (webpack-internal:///(rsc)/./src/app/api/discover/route.ts:225:24)
+    at async AppRouteRouteModule.do (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:33891)
+    at async AppRouteRouteModule.handle (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:41254)
+    at async doRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1513:42)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1915:28)
+    at async DevServer.renderPageComponent (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2393:24)
+    at async DevServer.renderToResponseImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2430:32)
+    at async DevServer.pipeImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1003:25)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/next-server.js:304:17)
+    at async DevServer.handleRequestImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:895:17)
+    at async node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:371:20
+    at async Span.traceAsyncFn (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:368:24)
+    at async invokeRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:235:21)
+    at async handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:426:24)
+    at async requestHandlerImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:450:13)
+    at async Server.requestListener (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/start-server.js:158:13)
+
+  [cause]: Connect Timeout Error (attempted address: www.rra.gov.rw:443, timeout: 10000ms)
+
+      at onConnectTimeout (node:internal/deps/undici/undici:1532:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1513:11)
+      at process.processImmediate (node:internal/timers:505:21)
+
+
+ ERROR  Failed to resolve discover feed. fetch failed                                                           api:discover 1:39:33 PM
+
+    at node:internal/deps/undici/undici:15433:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:473:9)
+    at async fetchHtml (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:121:17)
+    at async fetchKifcNews (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:240:18)
+    at async fetchKifcAdvisoryInsights (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:309:25)
+    at async Promise.all (index 0)
+    at async art (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/topicPipelines.ts:102:58)
+    at async GET (webpack-internal:///(rsc)/./src/app/api/discover/route.ts:225:24)
+    at async AppRouteRouteModule.do (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:33891)
+    at async AppRouteRouteModule.handle (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:41254)
+    at async doRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1513:42)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1915:28)
+    at async DevServer.renderPageComponent (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2393:24)
+    at async DevServer.renderToResponseImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2430:32)
+    at async DevServer.pipeImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1003:25)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/next-server.js:304:17)
+    at async DevServer.handleRequestImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:895:17)
+    at async node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:371:20
+    at async Span.traceAsyncFn (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:368:24)
+    at async invokeRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:235:21)
+    at async handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:426:24)
+    at async requestHandlerImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:450:13)
+    at async Server.requestListener (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/start-server.js:158:13)
+
+  [cause]: Connect Timeout Error (attempted address: kifc.rw:443, timeout: 10000ms)
+
+      at onConnectTimeout (node:internal/deps/undici/undici:1532:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1513:11)
+      at process.processImmediate (node:internal/timers:505:21)
+
+
+ ERROR  Failed to resolve discover feed. fetch failed                                                           api:discover 1:39:34 PM
+
+    at node:internal/deps/undici/undici:15433:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:473:9)
+    at async fetchJson (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:133:17)
+    at async fetchKifcMediaDocuments (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:196:19)
+    at async Promise.all (index 1)
+    at async fetchKifcPolicyDocuments (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/kifc.ts:216:39)
+    at async Promise.all (index 3)
+    at async finance (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/topicPipelines.ts:68:70)
+    at async GET (webpack-internal:///(rsc)/./src/app/api/discover/route.ts:225:24)
+    at async AppRouteRouteModule.do (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:33891)
+    at async AppRouteRouteModule.handle (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:41254)
+    at async doRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1513:42)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1915:28)
+    at async DevServer.renderPageComponent (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2393:24)
+    at async DevServer.renderToResponseImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2430:32)
+    at async DevServer.pipeImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1003:25)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/next-server.js:304:17)
+    at async DevServer.handleRequestImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:895:17)
+    at async node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:371:20
+    at async Span.traceAsyncFn (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:368:24)
+    at async invokeRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:235:21)
+    at async handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:426:24)
+    at async requestHandlerImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:450:13)
+    at async Server.requestListener (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/start-server.js:158:13)
+
+  [cause]: Connect Timeout Error (attempted address: kifc.rw:443, timeout: 10000ms)
+
+      at onConnectTimeout (node:internal/deps/undici/undici:1532:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1513:11)
+      at process.processImmediate (node:internal/timers:505:21)
+
+
+ ERROR  Failed to resolve discover feed. fetch failed                                                           api:discover 1:39:36 PM
+
+    at node:internal/deps/undici/undici:15433:13
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:473:9)
+    at async fetchRraNewsArticles (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/rraNews.ts:43:22)
+    at async Promise.all (index 0)
+    at async sports (webpack-internal:///(rsc)/./src/lib/discover/countries/rwanda/topicPipelines.ts:127:85)
+    at async GET (webpack-internal:///(rsc)/./src/app/api/discover/route.ts:225:24)
+    at async AppRouteRouteModule.do (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:33891)
+    at async AppRouteRouteModule.handle (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:26:41254)
+    at async doRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1513:42)
+    at async DevServer.renderToResponseWithComponentsImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1915:28)
+    at async DevServer.renderPageComponent (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2393:24)
+    at async DevServer.renderToResponseImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:2430:32)
+    at async DevServer.pipeImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:1003:25)
+    at async NextNodeServer.handleCatchallRenderRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/next-server.js:304:17)
+    at async DevServer.handleRequestImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/base-server.js:895:17)
+    at async node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:371:20
+    at async Span.traceAsyncFn (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/trace/trace.js:157:20)
+    at async DevServer.handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/dev/next-dev-server.js:368:24)
+    at async invokeRender (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:235:21)
+    at async handleRequest (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:426:24)
+    at async requestHandlerImpl (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/router-server.js:450:13)
+    at async Server.requestListener (node_modules/.pnpm/next@15.2.6_@playwright+test@1.56.1_react-dom@19.2.1_react@19.2.1__react@19.2.1/node_modules/next/dist/server/lib/start-server.js:158:13)
+
+  [cause]: Connect Timeout Error (attempted address: www.rra.gov.rw:443, timeout: 10000ms)
+
+      at onConnectTimeout (node:internal/deps/undici/undici:1532:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1513:11)
+      at process.processImmediate (node:internal/timers:505:21)
+
+ GET /api/discover?topic=sports&country=rwanda 500 in 10096ms
+ GET /api/auth/get-session 200 in 79ms
+ ✓ Compiled in 2.6s (8811 modules)
+⚙ Skipping provider Ollama because required environment variables are missing.                                       config 1:39:47 PM
+⚙ Skipping provider Anthropic because required environment variables are missing.                                    config 1:39:47 PM
+⚙ Skipping provider Google Gemini because required environment variables are missing.                                config 1:39:47 PM
+⚙ Skipping provider Groq because required environment variables are missing.                                         config 1:39:47 PM
+⚙ Skipping provider Deepseek AI because required environment variables are missing.                                  config 1:39:47 PM
+⚙ Skipping provider AI/ML API because required environment variables are missing.                                    config 1:39:47 PM
+⚙ Skipping provider LM Studio because required environment variables are missing.                                    config 1:39:47 PM
+⚙ Skipping provider Lemonade because required environment variables are missing.                                     config 1:39:47 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-0c69f1f3', name: 'OpenAI' }                     models:registry 1:39:48 PM
+⚙ Initialized model provider. { type: 'openai', id: 'openai-groq-bc547248', name: 'Groq' }                  models:registry 1:39:48 PM
+ GET /discover 200 in 1893ms
+ ✓ Compiled /manifest.webmanifest in 253ms (4075 modules)
+ GET /manifest.webmanifest 200 in 320ms
+ ✓ Compiled /_not-found in 415ms (8817 modules)
+ GET /icon.png 404 in 526ms
+ GET /api/auth/get-session 200 in 350ms
+ GET /api/auth/get-session 200 in 165ms
