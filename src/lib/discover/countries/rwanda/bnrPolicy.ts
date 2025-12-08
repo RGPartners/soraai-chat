@@ -1,3 +1,4 @@
+import { normalizeGlyphs } from '@/lib/discover/utils';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const BNR_BASE_URL = 'https://bnr.rw';
@@ -67,5 +68,9 @@ export const fetchBnrRegulatoryFrameworks = async (
     });
   }
 
-  return sanitized;
+  return sanitized.map((article) => ({
+    ...article,
+    title: normalizeGlyphs(article.title) ?? article.title,
+    content: normalizeGlyphs(article.content) ?? article.content,
+  }));
 };

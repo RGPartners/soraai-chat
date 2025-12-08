@@ -17,6 +17,7 @@ import {
   filterOutDiscoverEntries,
   getHost,
   getPublishedTimestamp,
+  normalizeGlyphs,
   resolveDiscoverThumbnail,
 } from '@/lib/discover/utils';
 import type { DiscoverArticle } from '@/lib/types/discover';
@@ -111,6 +112,12 @@ const NEWS_EXCLUDE_KEYWORDS = [
   'notice',
 ];
 
+const withNormalizedGlyphs = <T extends { title?: string; content?: string }>(article: T): T => ({
+  ...article,
+  title: normalizeGlyphs(article.title) ?? article.title ?? '',
+  content: normalizeGlyphs(article.content) ?? article.content ?? '',
+});
+
 export const rwandaTopicPipelines: Record<string, TopicPipelineResolver> = {
   tech: async ({ resultLimit }) => {
     const fetchLimit = Math.max(resultLimit * 2, 24);
@@ -133,14 +140,16 @@ export const rwandaTopicPipelines: Record<string, TopicPipelineResolver> = {
       fetchLimit,
     );
 
-    const mapped = combined.map((doc) => ({
-      title: doc.title,
-      content: doc.content,
-      url: doc.url,
-      thumbnail: resolveDiscoverThumbnail(doc),
-      source: doc.source ?? getHost(doc.url) ?? 'Regulation Feed',
-      publishedAt: doc.publishedAt ?? undefined,
-    }));
+    const mapped = combined.map((doc) =>
+      withNormalizedGlyphs({
+        title: doc.title,
+        content: doc.content,
+        url: doc.url,
+        thumbnail: resolveDiscoverThumbnail(doc),
+        source: doc.source ?? getHost(doc.url) ?? 'Regulation Feed',
+        publishedAt: doc.publishedAt ?? undefined,
+      }),
+    );
 
     const focused = filterDiscoverEntries(mapped, REGULATION_FOCUS_KEYWORDS, {
       includeBase: false,
@@ -174,14 +183,16 @@ export const rwandaTopicPipelines: Record<string, TopicPipelineResolver> = {
         ? combined
         : filteredSources.flat().filter((item) => Boolean(item));
 
-    const mapped = fallback.slice(0, fetchLimit).map((doc) => ({
-      title: doc.title,
-      content: doc.content,
-      url: doc.url,
-      thumbnail: resolveDiscoverThumbnail(doc),
-      source: doc.source ?? getHost(doc.url) ?? 'Tax Updates & Compliance Feed',
-      publishedAt: doc.publishedAt ?? undefined,
-    }));
+    const mapped = fallback.slice(0, fetchLimit).map((doc) =>
+      withNormalizedGlyphs({
+        title: doc.title,
+        content: doc.content,
+        url: doc.url,
+        thumbnail: resolveDiscoverThumbnail(doc),
+        source: doc.source ?? getHost(doc.url) ?? 'Tax Updates & Compliance Feed',
+        publishedAt: doc.publishedAt ?? undefined,
+      }),
+    );
 
     const cleaned = filterOutDiscoverEntries(mapped, TAX_COMPLIANCE_EXCLUDE_KEYWORDS);
     const candidate = cleaned.length > 0 ? cleaned : mapped;
@@ -204,14 +215,16 @@ export const rwandaTopicPipelines: Record<string, TopicPipelineResolver> = {
     const fallback =
       combined.length > 0 ? combined : [...kifcAdvisory, ...rdbAdvisory];
 
-    const mapped = fallback.slice(0, fetchLimit).map((doc) => ({
-      title: doc.title,
-      content: doc.content,
-      url: doc.url,
-      thumbnail: resolveDiscoverThumbnail(doc),
-      source: doc.source,
-      publishedAt: doc.publishedAt,
-    }));
+    const mapped = fallback.slice(0, fetchLimit).map((doc) =>
+      withNormalizedGlyphs({
+        title: doc.title,
+        content: doc.content,
+        url: doc.url,
+        thumbnail: resolveDiscoverThumbnail(doc),
+        source: doc.source,
+        publishedAt: doc.publishedAt,
+      }),
+    );
 
     const unique = dedupeByThumbnail(mapped);
     return unique.slice(0, resultLimit);
@@ -248,14 +261,16 @@ export const rwandaTopicPipelines: Record<string, TopicPipelineResolver> = {
         ? combined
         : filteredSources.flat().filter((item) => Boolean(item));
 
-    const mapped = fallback.map((doc) => ({
-      title: doc.title,
-      content: doc.content,
-      url: doc.url,
-      thumbnail: resolveDiscoverThumbnail(doc),
-      source: doc.source ?? getHost(doc.url) ?? 'Alerts Feed',
-      publishedAt: doc.publishedAt ?? undefined,
-    }));
+    const mapped = fallback.map((doc) =>
+      withNormalizedGlyphs({
+        title: doc.title,
+        content: doc.content,
+        url: doc.url,
+        thumbnail: resolveDiscoverThumbnail(doc),
+        source: doc.source ?? getHost(doc.url) ?? 'Alerts Feed',
+        publishedAt: doc.publishedAt ?? undefined,
+      }),
+    );
 
     const unique = dedupeByThumbnail(mapped);
 
@@ -268,14 +283,16 @@ export const rwandaTopicPipelines: Record<string, TopicPipelineResolver> = {
     const filtered = filterOutDiscoverEntries(minfinArticles, NEWS_EXCLUDE_KEYWORDS);
     const candidate = filtered.length > 0 ? filtered : minfinArticles;
 
-    const mapped = candidate.map((doc) => ({
-      title: doc.title,
-      content: doc.content,
-      url: doc.url,
-      thumbnail: resolveDiscoverThumbnail(doc),
-      source: doc.source ?? getHost(doc.url) ?? 'Minecofin News',
-      publishedAt: doc.publishedAt,
-    }));
+    const mapped = candidate.map((doc) =>
+      withNormalizedGlyphs({
+        title: doc.title,
+        content: doc.content,
+        url: doc.url,
+        thumbnail: resolveDiscoverThumbnail(doc),
+        source: doc.source ?? getHost(doc.url) ?? 'Minecofin News',
+        publishedAt: doc.publishedAt,
+      }),
+    );
 
     const unique = dedupeByThumbnail(mapped);
 

@@ -1,4 +1,5 @@
 import { XMLParser } from 'fast-xml-parser';
+import { normalizeGlyphs } from '@/lib/discover/utils';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const xmlParser = new XMLParser({
@@ -138,12 +139,14 @@ export const fetchXTimeline = async (
 
       const normalized: DiscoverArticle[] = [];
       for (const item of items.slice(0, limit)) {
-        const title =
+        const rawTitle =
           decodeHtml(stripTags(item.title?.text || item.title)) ||
           `${displayName} update`;
-        const description = decodeHtml(
+        const rawDescription = decodeHtml(
           stripTags(item.description?.text || item.description),
         );
+        const title = normalizeGlyphs(rawTitle) ?? rawTitle;
+        const description = normalizeGlyphs(rawDescription) ?? rawDescription;
         const canonicalUrl = toCanonicalTweetUrl(
           (item.link?.text || item.link)?.trim(),
           handle,

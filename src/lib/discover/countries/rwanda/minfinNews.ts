@@ -1,4 +1,5 @@
 import { HTMLElement, parse } from 'node-html-parser';
+import { normalizeGlyphs } from '@/lib/discover/utils';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const MINFIN_BASE_URL = 'https://www.minecofin.gov.rw';
@@ -99,5 +100,9 @@ export const fetchMinfinPolicyArticles = async (
     }
   }
 
-  return articles;
+  return articles.map((article) => ({
+    ...article,
+    title: normalizeGlyphs(article.title) ?? article.title,
+    content: normalizeGlyphs(article.content) ?? article.content,
+  }));
 };

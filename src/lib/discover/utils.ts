@@ -96,6 +96,22 @@ export const getPublishedTimestamp = (value?: string) => {
   return date.getTime();
 };
 
+const COMBINING_MARKS_REGEX = /[\u0300-\u036f]/g;
+const ZERO_WIDTH_REGEX = /[\u200B-\u200D\uFEFF]/g;
+
+export const normalizeGlyphs = (value?: string | null): string | undefined => {
+  if (value == null) {
+    return undefined;
+  }
+
+  const normalized = value
+    .normalize('NFKD')
+    .replace(COMBINING_MARKS_REGEX, '')
+    .replace(ZERO_WIDTH_REGEX, '');
+
+  return normalized;
+};
+
 const GRADIENT_THUMBNAILS = [
   '/gradients/alejandro-ortiz-zNqFgpzMI7Q-unsplash.jpg',
   '/gradients/ikhlas-lNoAcnHIRo0-unsplash.jpg',

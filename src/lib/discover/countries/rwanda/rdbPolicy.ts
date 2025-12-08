@@ -1,4 +1,5 @@
 import { parse } from 'node-html-parser';
+import { normalizeGlyphs } from '@/lib/discover/utils';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const RDB_BASE_URL = 'https://rdb.rw';
@@ -185,5 +186,10 @@ export const fetchRdbPolicyDocuments = async (
     return bTime - aTime;
   });
 
-  return deduped.slice(0, limit);
+  const sliced = deduped.slice(0, limit);
+  return sliced.map((article) => ({
+    ...article,
+    title: normalizeGlyphs(article.title) ?? article.title,
+    content: normalizeGlyphs(article.content) ?? article.content,
+  }));
 };

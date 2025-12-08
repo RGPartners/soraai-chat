@@ -1,4 +1,5 @@
 import { parse } from 'node-html-parser';
+import { normalizeGlyphs } from '@/lib/discover/utils';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const RDB_BASE_URL = 'https://rdb.rw';
@@ -151,5 +152,9 @@ export const fetchRdbAdvisoryInsights = async (
     return bTime - aTime;
   });
 
-  return prioritized.slice(0, limit);
+  return prioritized.slice(0, limit).map((article) => ({
+    ...article,
+    title: normalizeGlyphs(article.title) ?? article.title,
+    content: normalizeGlyphs(article.content) ?? article.content,
+  }));
 };

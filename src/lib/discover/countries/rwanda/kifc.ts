@@ -1,4 +1,5 @@
 import { HTMLElement, parse } from 'node-html-parser';
+import { normalizeGlyphs } from '@/lib/discover/utils';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const KIFC_BASE_URL = 'https://kifc.rw';
@@ -217,7 +218,11 @@ const fetchKifcResourcesPageDocuments = async (limit: number) => {
     if (docs.length >= limit) break;
   }
 
-  return docs;
+  return docs.map((doc) => ({
+    ...doc,
+    title: normalizeGlyphs(doc.title) ?? doc.title,
+    content: normalizeGlyphs(doc.content) ?? doc.content,
+  }));
 };
 
 const fetchKifcMediaDocuments = async (limit: number) => {
@@ -254,7 +259,11 @@ const fetchKifcMediaDocuments = async (limit: number) => {
     if (docs.length >= limit) break;
   }
 
-  return docs;
+  return docs.map((doc) => ({
+    ...doc,
+    title: normalizeGlyphs(doc.title) ?? doc.title,
+    content: normalizeGlyphs(doc.content) ?? doc.content,
+  }));
 };
 
 export const fetchKifcPolicyDocuments = async (limit = 30): Promise<DiscoverArticle[]> => {
@@ -280,7 +289,12 @@ export const fetchKifcPolicyDocuments = async (limit = 30): Promise<DiscoverArti
     return bTime - aTime;
   });
 
-  return deduped.slice(0, limit);
+  const sliced = deduped.slice(0, limit);
+  return sliced.map((doc) => ({
+    ...doc,
+    title: normalizeGlyphs(doc.title) ?? doc.title,
+    content: normalizeGlyphs(doc.content) ?? doc.content,
+  }));
 };
 
 export const fetchKifcNews = async (limit = 24): Promise<DiscoverArticle[]> => {
@@ -326,7 +340,11 @@ export const fetchKifcNews = async (limit = 24): Promise<DiscoverArticle[]> => {
     if (mapped.length >= limit) break;
   }
 
-  return dedupeArticles(mapped);
+  return dedupeArticles(mapped).map((doc) => ({
+    ...doc,
+    title: normalizeGlyphs(doc.title) ?? doc.title,
+    content: normalizeGlyphs(doc.content) ?? doc.content,
+  }));
 };
 
 export const fetchKifcEvents = async (limit = 24): Promise<DiscoverArticle[]> => {
@@ -382,7 +400,11 @@ export const fetchKifcEvents = async (limit = 24): Promise<DiscoverArticle[]> =>
     if (mapped.length >= limit) break;
   }
 
-  return dedupeArticles(mapped);
+  return dedupeArticles(mapped).map((doc) => ({
+    ...doc,
+    title: normalizeGlyphs(doc.title) ?? doc.title,
+    content: normalizeGlyphs(doc.content) ?? doc.content,
+  }));
 };
 
 export const fetchKifcAdvisoryInsights = async (

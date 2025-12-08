@@ -1,4 +1,5 @@
 import { HTMLElement, parse } from 'node-html-parser';
+import { normalizeGlyphs } from '@/lib/discover/utils';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const RRA_BASE_URL = 'https://www.rra.gov.rw';
@@ -110,5 +111,9 @@ export const fetchRraNewsArticles = async (
     }
   }
 
-  return deduped;
+  return deduped.map((article) => ({
+    ...article,
+    title: normalizeGlyphs(article.title) ?? article.title,
+    content: normalizeGlyphs(article.content) ?? article.content,
+  }));
 };
