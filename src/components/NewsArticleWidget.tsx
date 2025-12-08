@@ -15,17 +15,30 @@ const NewsArticleWidget = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch('/api/discover?mode=preview')
+    const controller = new AbortController();
+
+    fetch('/api/discover?mode=preview&topic=sports&country=rwanda', {
+      signal: controller.signal,
+    })
       .then((res) => res.json())
       .then((data) => {
         const articles = (data.blogs || []).filter((a: Article) => a.thumbnail);
-        setArticle(articles[Math.floor(Math.random() * articles.length)]);
+        if (articles.length > 0) {
+          setArticle(articles[Math.floor(Math.random() * articles.length)]);
+        } else {
+          setArticle(null);
+        }
         setLoading(false);
       })
       .catch(() => {
+        if (controller.signal.aborted) return;
         setError(true);
         setLoading(false);
       });
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   return (
