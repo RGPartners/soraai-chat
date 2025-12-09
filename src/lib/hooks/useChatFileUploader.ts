@@ -1,11 +1,11 @@
 'use client';
 
-import crypto from 'crypto';
 import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth/client';
 import { canUploadFiles } from '@/lib/auth/client-permissions';
 import { useChat, type File as ChatFile } from './useChat';
+import { generateUUID } from '@/lib/utils/random';
 
 const SUPPORTED_EXTENSIONS = ['pdf', 'docx', 'txt'] as const;
 
@@ -16,7 +16,7 @@ const buildChatFile = (
   uploaded: { fileName: string; fileExtension: string; fileId: string },
   original?: globalThis.File,
 ): ChatFile => ({
-  clientId: crypto.randomUUID(),
+  clientId: generateUUID(),
   fileId: uploaded.fileId,
   fileName: uploaded.fileName,
   fileExtension: uploaded.fileExtension,

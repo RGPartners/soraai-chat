@@ -18,7 +18,6 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import crypto from 'crypto';
 import { useParams, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { getSuggestions } from '../actions';
@@ -34,6 +33,7 @@ import {
   isWritingFocusEnabled,
   isYoutubeFocusEnabled,
 } from '../config/features';
+import { generateHexId } from '@/lib/utils/random';
 
 export type Section = {
   userMessage: UserMessage;
@@ -258,7 +258,7 @@ const loadMessages = async (
         : undefined;
 
     return {
-      clientId: crypto.randomBytes(10).toString('hex'),
+      clientId: generateHexId(10),
       fileId: file.fileId,
       fileName: file.name,
       fileExtension: file.fileExtension ?? fallbackExtension,
@@ -626,7 +626,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     } else if (!chatId) {
       setNewChatCreated(true);
       setIsMessagesLoaded(true);
-      setChatId(crypto.randomBytes(20).toString('hex'));
+      setChatId(generateHexId(20));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId, isMessagesLoaded, newChatCreated, messages.length]);
@@ -731,7 +731,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     let recievedMessage = '';
     let added = false;
 
-    messageId = messageId ?? crypto.randomBytes(7).toString('hex');
+    messageId = messageId ?? generateHexId(7);
 
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -754,7 +754,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       if (data.type === 'sources') {
         const sources = Array.isArray(data.data) ? data.data : [];
         const sourceMessageId =
-          data.messageId ?? crypto.randomBytes(7).toString('hex');
+          data.messageId ?? generateHexId(7);
 
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -860,7 +860,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
                 suggestions: suggestions,
                 chatId: chatId!,
                 createdAt: new Date(),
-                messageId: crypto.randomBytes(7).toString('hex'),
+                messageId: generateHexId(7),
               },
             ];
           });
