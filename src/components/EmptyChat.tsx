@@ -1,7 +1,7 @@
 'use client';
 
 import EmptyChatMessageInput from './EmptyChatMessageInput';
-import WeatherWidget from './WeatherWidget';
+import RatesWidget from './RatesWidget';
 import NewsArticleWidget from './NewsArticleWidget';
 import SettingsButtonMobile from '@/components/Settings/SettingsButtonMobile';
 import ChatGreeting from '@/components/ChatGreeting';
@@ -28,7 +28,7 @@ const EmptyChat = ({ canManageSettings, locale, displayName }: EmptyChatProps) =
         </div>
         <div className="flex flex-col w-full gap-4 mt-2 sm:flex-row sm:justify-center">
           <div className="flex-1 w-full">
-            <WeatherWidget />
+            <RatesWidget />
           </div>
           <div className="flex-1 w-full">
             <NewsArticleWidget />

@@ -2,6 +2,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { normalizeThumbnailUrl } from '@/lib/utils/url';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const getRelativePublished = (isoDate?: string) => {
@@ -14,9 +15,11 @@ const getRelativePublished = (isoDate?: string) => {
 const MajorNewsCard = ({
   item,
   isLeft = true,
+  isCompact = false,
 }: {
   item: DiscoverArticle;
   isLeft?: boolean;
+  isCompact?: boolean;
 }) => {
   const relativePublished = getRelativePublished(item.publishedAt);
 
@@ -50,12 +53,20 @@ const MajorNewsCard = ({
           </div>
           <div className="flex flex-col justify-center flex-1 py-4">
             <h2
-              className="text-3xl font-light mb-3 leading-tight line-clamp-3 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition duration-200"
+              className={cn(
+                'text-3xl font-light leading-tight group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition duration-200',
+                isCompact ? 'mb-2 line-clamp-1' : 'mb-3 line-clamp-3',
+              )}
               style={{ fontFamily: 'PP Editorial, serif' }}
             >
               {item.title}
             </h2>
-            <p className="text-black/60 dark:text-white/60 text-base leading-relaxed line-clamp-4">
+            <p
+              className={cn(
+                'text-black/60 dark:text-white/60 text-base leading-relaxed',
+                isCompact ? 'line-clamp-2' : 'line-clamp-4',
+              )}
+            >
               {item.content}
             </p>
             {(item.source || relativePublished) && <Meta />}
@@ -65,12 +76,20 @@ const MajorNewsCard = ({
         <>
           <div className="flex flex-col justify-center flex-1 py-4">
             <h2
-              className="text-3xl font-light mb-3 leading-tight line-clamp-3 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition duration-200"
+              className={cn(
+                'text-3xl font-light leading-tight group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition duration-200',
+                isCompact ? 'mb-2 line-clamp-1' : 'mb-3 line-clamp-3',
+              )}
               style={{ fontFamily: 'PP Editorial, serif' }}
             >
               {item.title}
             </h2>
-            <p className="text-black/60 dark:text-white/60 text-base leading-relaxed line-clamp-4">
+            <p
+              className={cn(
+                'text-black/60 dark:text-white/60 text-base leading-relaxed',
+                isCompact ? 'line-clamp-2' : 'line-clamp-4',
+              )}
+            >
               {item.content}
             </p>
             {(item.source || relativePublished) && <Meta />}

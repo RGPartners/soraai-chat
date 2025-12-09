@@ -111,6 +111,7 @@ const Page = () => {
     () => getCountryLabel(resolvedCountry),
     [resolvedCountry],
   );
+  const isTaxAlertsTopic = topicMeta?.label === 'Tax Alerts & Deadlines';
 
   return (
     <>
@@ -229,6 +230,7 @@ const Page = () => {
                           key={`major-${index}`}
                           item={articles[index]}
                           isLeft={false}
+                          isCompact={isTaxAlertsTopic}
                         />,
                       );
                       index++;
@@ -278,6 +280,7 @@ const Page = () => {
                             key={`double-${index + i}`}
                             item={item}
                             isLeft={i === 0}
+                            isCompact={isTaxAlertsTopic}
                           />,
                         );
                         if (i === 0) {
@@ -296,6 +299,7 @@ const Page = () => {
                           key={`final-major-${index}`}
                           item={articles[index]}
                           isLeft={true}
+                          isCompact={isTaxAlertsTopic}
                         />,
                       );
                       index++;

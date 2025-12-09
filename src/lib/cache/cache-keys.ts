@@ -6,4 +6,5 @@ export const CacheKeys = {
     mode: 'normal' | 'preview',
     country?: string,
   ) => `discover:${mode}:${country ?? 'global'}:${topic}`,
+  rates: () => 'rates',
 };
