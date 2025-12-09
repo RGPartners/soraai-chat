@@ -5,53 +5,49 @@ import {
   PopoverPanel,
   Transition,
 } from '@headlessui/react';
-import {
-  CopyPlus,
-  File,
-  Link,
-  LoaderCircle,
-  Paperclip,
-  Plus,
-  Trash,
-} from 'lucide-react';
-import { Fragment, useRef, useState } from 'react';
+import { File, LoaderCircle, Paperclip, Plus, Trash } from 'lucide-react';
+import { Fragment, useCallback, useEffect, useRef } from 'react';
 import { useChat } from '@/lib/hooks/useChat';
+import { useChatFileUploader } from '@/lib/hooks/useChatFileUploader';
 
 const Attach = () => {
-  const { files, setFiles, setFileIds, fileIds } = useChat();
-
-  const [loading, setLoading] = useState(false);
+  const { files, setFiles, setFileIds, autoOpenAttachmentSignal } = useChat();
+  const { uploadFiles, isUploading } = useChatFileUploader();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const lastAutoOpenSignalRef = useRef(0);
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoading(true);
-    const data = new FormData();
+  const handleChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFiles = event.target.files;
+      if (!selectedFiles || selectedFiles.length === 0) {
+        return;
+      }
 
-    for (let i = 0; i < e.target.files!.length; i++) {
-      data.append('files', e.target.files![i]);
+      await uploadFiles(selectedFiles);
+      event.target.value = '';
+    },
+    [uploadFiles],
+  );
+
+  useEffect(() => {
+    if (!autoOpenAttachmentSignal) {
+      return;
     }
 
-    const embeddingModelProvider = localStorage.getItem(
-      'embeddingModelProviderId',
-    );
-    const embeddingModel = localStorage.getItem('embeddingModelKey');
+    if (autoOpenAttachmentSignal === lastAutoOpenSignalRef.current) {
+      return;
+    }
 
-    data.append('embedding_model_provider_id', embeddingModelProvider!);
-    data.append('embedding_model_key', embeddingModel!);
+    lastAutoOpenSignalRef.current = autoOpenAttachmentSignal;
 
-    const res = await fetch(`/api/uploads`, {
-      method: 'POST',
-      body: data,
-    });
+    if (isUploading) {
+      return;
+    }
 
-    const resData = await res.json();
+    fileInputRef.current?.click();
+  }, [autoOpenAttachmentSignal, isUploading]);
 
-    setFiles([...files, ...resData.files]);
-    setFileIds([...fileIds, ...resData.files.map((file: any) => file.fileId)]);
-    setLoading(false);
-  };
-
-  return loading ? (
+  return isUploading ? (
     <div className="active:border-none hover:bg-light-200 hover:dark:bg-dark-200 p-2 rounded-lg focus:outline-none text-black/50 dark:text-white/50 transition duration-200">
       <LoaderCircle size={16} className="text-sky-400 animate-spin" />
     </div>
@@ -82,7 +78,11 @@ const Attach = () => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex flex-row items-center space-x-1 text-black/70 dark:text-white/70 hover:text-black hover:dark:text-white transition duration-200 focus:outline-none"
+                  disabled={isUploading}
+                  className={cn(
+                    'flex flex-row items-center space-x-1 text-black/70 dark:text-white/70 hover:text-black hover:dark:text-white transition duration-200 focus:outline-none',
+                    isUploading && 'cursor-not-allowed opacity-60',
+                  )}
                 >
                   <input
                     type="file"
@@ -91,6 +91,7 @@ const Attach = () => {
                     accept=".pdf,.docx,.txt"
                     multiple
                     hidden
+                    disabled={isUploading}
                   />
                   <Plus size={16} />
                   <p className="text-xs">Add</p>
@@ -140,6 +141,7 @@ const Attach = () => {
       onClick={() => fileInputRef.current?.click()}
       className={cn(
         'flex items-center justify-center active:border-none hover:bg-light-200 hover:dark:bg-dark-200 p-2 rounded-lg focus:outline-none headless-open:text-black dark:headless-open:text-white text-black/50 dark:text-white/50 active:scale-95 transition duration-200 hover:text-black dark:hover:text-white',
+        isUploading && 'pointer-events-none opacity-60',
       )}
     >
       <input
@@ -149,6 +151,7 @@ const Attach = () => {
         accept=".pdf,.docx,.txt"
         multiple
         hidden
+        disabled={isUploading}
       />
       <Paperclip size={16} className="-rotate-45 transform" />
     </button>

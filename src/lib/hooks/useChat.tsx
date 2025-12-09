@@ -15,6 +15,8 @@ import {
   useMemo,
   useRef,
   useState,
+  type Dispatch,
+  type SetStateAction,
 } from 'react';
 import crypto from 'crypto';
 import { useParams, useSearchParams } from 'next/navigation';
@@ -23,7 +25,15 @@ import { getSuggestions } from '../actions';
 import { MinimalProvider } from '../models/types';
 import { getAutoMediaSearch } from '../config/clientRegistry';
 import { authClient } from '../auth/client';
-import { defaultChatModelKey } from '../config/features';
+import {
+  defaultChatModelKey,
+  isAcademicFocusEnabled,
+  isEbmValidatorEnabled,
+  isRedditFocusEnabled,
+  isWolframFocusEnabled,
+  isWritingFocusEnabled,
+  isYoutubeFocusEnabled,
+} from '../config/features';
 
 export type Section = {
   userMessage: UserMessage;
@@ -42,6 +52,7 @@ type ChatContext = {
   chatHistory: [string, string][];
   files: File[];
   fileIds: string[];
+  autoOpenAttachmentSignal: number;
   focusMode: string;
   chatId: string | undefined;
   optimizationMode: string;
@@ -55,8 +66,8 @@ type ChatContext = {
   embeddingModelProvider: EmbeddingModelProvider;
   setOptimizationMode: (mode: string) => void;
   setFocusMode: (mode: string) => void;
-  setFiles: (files: File[]) => void;
-  setFileIds: (fileIds: string[]) => void;
+  setFiles: Dispatch<SetStateAction<File[]>>;
+  setFileIds: Dispatch<SetStateAction<string[]>>;
   sendMessage: (
     message: string,
     messageId?: string,
@@ -68,9 +79,20 @@ type ChatContext = {
 };
 
 export interface File {
+  clientId: string;
+  fileId?: string;
   fileName: string;
-  fileExtension: string;
-  fileId: string;
+  fileExtension?: string;
+  mimeType?: string;
+  size?: number;
+  storageKey?: string;
+  sourceUrl?: string;
+  uploadedAt?: string;
+  previewUrl?: string;
+  isUploading?: boolean;
+  progress?: number;
+  error?: string | null;
+  abortController?: AbortController;
 }
 
 interface ChatModelProvider {
@@ -229,16 +251,36 @@ const loadMessages = async (
     document.title = chatTurns[0].content;
   }
 
-  const files = data.chat.files.map((file: any) => {
+  const loadedFiles = (data.chat.files ?? []).map((file: any) => {
+    const fallbackExtension =
+      typeof file.name === 'string'
+        ? file.name.split('.').pop()
+        : undefined;
+
     return {
-      fileName: file.name,
-      fileExtension: file.name.split('.').pop(),
+      clientId: crypto.randomBytes(10).toString('hex'),
       fileId: file.fileId,
-    };
+      fileName: file.name,
+      fileExtension: file.fileExtension ?? fallbackExtension,
+      mimeType: file.mimeType,
+      size: file.size,
+      storageKey: file.storageKey,
+      sourceUrl: file.sourceUrl,
+      uploadedAt: file.uploadedAt,
+    } satisfies File;
   });
 
-  setFiles(files);
-  setFileIds(files.map((file: File) => file.fileId));
+  setFiles(loadedFiles);
+
+  const hasFileId = (file: File): file is File & { fileId: string } => {
+    return typeof file.fileId === 'string' && file.fileId.length > 0;
+  };
+
+  const existingFileIds = loadedFiles
+    .filter(hasFileId)
+    .map((file: File & { fileId: string }) => file.fileId);
+
+  setFileIds(existingFileIds);
 
   setChatHistory(history);
   setFocusMode(data.chat.focusMode);
@@ -250,6 +292,7 @@ export const chatContext = createContext<ChatContext>({
   chatId: '',
   fileIds: [],
   files: [],
+  autoOpenAttachmentSignal: 0,
   focusMode: '',
   hasError: false,
   isMessagesLoaded: false,
@@ -265,8 +308,12 @@ export const chatContext = createContext<ChatContext>({
   embeddingModelProvider: { key: '', providerId: '' },
   rewrite: () => {},
   sendMessage: async () => {},
-  setFileIds: () => {},
-  setFiles: () => {},
+  setFileIds: (() => {
+    /* noop */
+  }) as Dispatch<SetStateAction<string[]>>,
+  setFiles: (() => {
+    /* noop */
+  }) as Dispatch<SetStateAction<File[]>>,
   setFocusMode: () => {},
   setOptimizationMode: () => {},
   setChatModelProvider: () => {},
@@ -279,6 +326,37 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const initialMessageParam =
     searchParams.get('q') ?? searchParams.get('initial');
   const initialMessage = initialMessageParam?.trim() ?? null;
+  const focusParamRaw = searchParams.get('focus');
+  const focusParam = focusParamRaw?.trim() ?? null;
+  const autoAttachParam = searchParams.get('autoAttach');
+  const shouldAutoAttach = Boolean(
+    autoAttachParam &&
+      ['1', 'true', 'yes', 'on'].includes(autoAttachParam.trim().toLowerCase()),
+  );
+  const allowedFocusModes = useMemo(() => {
+    const modes = new Set<string>(['webSearch']);
+    if (isAcademicFocusEnabled) {
+      modes.add('academicSearch');
+    }
+    if (isWritingFocusEnabled) {
+      modes.add('writingAssistant');
+    }
+    if (isWolframFocusEnabled) {
+      modes.add('wolframAlphaSearch');
+    }
+    if (isYoutubeFocusEnabled) {
+      modes.add('youtubeSearch');
+    }
+    if (isRedditFocusEnabled) {
+      modes.add('redditSearch');
+    }
+    if (isEbmValidatorEnabled) {
+      modes.add('ebmValidator');
+    }
+    return modes;
+  }, []);
+  const initialFocusParam =
+    focusParam && allowedFocusModes.has(focusParam) ? focusParam : null;
   const { data: session, isPending: isSessionPending } = authClient.useSession();
 
   const [chatId, setChatId] = useState<string | undefined>(params.chatId);
@@ -317,9 +395,12 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [hasError, setHasError] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hasCheckedConfig, setHasCheckedConfig] = useState(false);
+  const [autoOpenAttachmentSignal, setAutoOpenAttachmentSignal] = useState(0);
 
   const messagesRef = useRef<Message[]>([]);
   const lastSessionIdRef = useRef<string | undefined>(undefined);
+  const initialFocusAppliedRef = useRef(false);
+  const autoAttachTriggeredRef = useRef(false);
 
   const chatTurns = useMemo((): ChatTurn[] => {
     return messages.filter(
@@ -509,6 +590,23 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   }, [params.chatId, chatId]);
 
   useEffect(() => {
+    if (!initialFocusParam) {
+      return;
+    }
+
+    if (initialFocusAppliedRef.current) {
+      return;
+    }
+
+    if (messages.length > 0) {
+      return;
+    }
+
+    setFocusMode(initialFocusParam);
+    initialFocusAppliedRef.current = true;
+  }, [initialFocusParam, messages.length, setFocusMode]);
+
+  useEffect(() => {
     if (
       chatId &&
       !newChatCreated &&
@@ -545,6 +643,28 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       setIsReady(false);
     }
   }, [isMessagesLoaded, isConfigReady]);
+
+  useEffect(() => {
+    if (!shouldAutoAttach) {
+      return;
+    }
+
+    if (!isReady) {
+      return;
+    }
+
+    if (autoAttachTriggeredRef.current) {
+      return;
+    }
+
+    if (messages.length > 0) {
+      autoAttachTriggeredRef.current = true;
+      return;
+    }
+
+    setAutoOpenAttachmentSignal((prev) => prev + 1);
+    autoAttachTriggeredRef.current = true;
+  }, [shouldAutoAttach, isReady, messages.length]);
 
   const rewrite = (messageId: string) => {
     const index = messages.findIndex((msg) => msg.messageId === messageId);
@@ -585,6 +705,12 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     rewrite = false,
   ) => {
     if (loading || !message) return;
+
+    if (files.some((file) => file.isUploading)) {
+      toast.error('Please wait for file uploads to finish before sending.');
+      return;
+    }
+
     setLoading(true);
     setMessageAppeared(false);
 
@@ -689,6 +815,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         ]);
 
         setLoading(false);
+        setFiles([]);
+        setFileIds([]);
 
         const lastMsg = messagesRef.current[messagesRef.current.length - 1];
 
@@ -809,6 +937,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         chatHistory,
         files,
         fileIds,
+        autoOpenAttachmentSignal,
         focusMode,
         chatId,
         hasError,
