@@ -54,10 +54,9 @@ const MajorNewsCard = ({
           <div className="flex flex-col justify-center flex-1 py-4">
             <h2
               className={cn(
-                'text-3xl font-light leading-tight group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition duration-200',
+                'text-xl lg:text-[1.5rem] font-semibold tracking-tight leading-tight group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition duration-200',
                 isCompact ? 'mb-2 line-clamp-1' : 'mb-3 line-clamp-3',
               )}
-              style={{ fontFamily: 'PP Editorial, serif' }}
             >
               {item.title}
             </h2>
@@ -77,10 +76,9 @@ const MajorNewsCard = ({
           <div className="flex flex-col justify-center flex-1 py-4">
             <h2
               className={cn(
-                'text-3xl font-light leading-tight group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition duration-200',
+                'text-xl lg:text-[1.5rem] font-semibold tracking-tight leading-tight group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition duration-200',
                 isCompact ? 'mb-2 line-clamp-1' : 'mb-3 line-clamp-3',
               )}
-              style={{ fontFamily: 'PP Editorial, serif' }}
             >
               {item.title}
             </h2>

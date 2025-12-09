@@ -121,10 +121,7 @@ const Page = () => {
             <div className="flex flex-col gap-3">
               <div className="flex items-center">
                 <NotebookPen size={45} className="mb-2.5" />
-                <h1
-                  className="text-5xl font-normal p-2"
-                  style={{ fontFamily: 'PP Editorial, serif' }}
-                >
+                <h1 className="text-3xl lg:text-4xl font-semibold tracking-tight p-2">
                   Tax Updates and Briefings
                 </h1>
               </div>
