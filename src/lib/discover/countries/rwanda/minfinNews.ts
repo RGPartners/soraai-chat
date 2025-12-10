@@ -1,5 +1,6 @@
 import { HTMLElement, parse } from 'node-html-parser';
 import { normalizeGlyphs } from '@/lib/discover/utils';
+import logger from '@/lib/logger';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const MINFIN_BASE_URL = 'https://www.minecofin.gov.rw';
@@ -44,20 +45,35 @@ const extractSummary = (container: HTMLElement) => {
   return raw;
 };
 
+const minfinNewsLogger = logger.withDefaults({ tag: 'discover:minfin-news' });
+
 export const fetchMinfinPolicyArticles = async (
   limit = 20,
 ): Promise<DiscoverArticle[]> => {
-  const response = await fetch(MINFIN_NEWS_URL, {
-    headers: {
-      'User-Agent': 'Perplexica/1.0 (Policy & Legislation)',
-      Accept: 'text/html,application/xhtml+xml',
-    },
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(MINFIN_NEWS_URL, {
+      headers: {
+        'User-Agent': 'Perplexica/1.0 (Policy & Legislation)',
+        Accept: 'text/html,application/xhtml+xml',
+      },
+    });
+  } catch (error) {
+    minfinNewsLogger.error('Failed to fetch Minecofin news listing.', {
+      error,
+      url: MINFIN_NEWS_URL,
+    });
+    return [];
+  }
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch Minecofin news listing. Status: ${response.status}`,
-    );
+    minfinNewsLogger.warn('Minecofin news listing returned non-success status.', {
+      status: response.status,
+      statusText: response.statusText,
+      url: MINFIN_NEWS_URL,
+    });
+    return [];
   }
 
   const html = await response.text();

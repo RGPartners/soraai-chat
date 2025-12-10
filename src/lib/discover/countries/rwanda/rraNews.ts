@@ -1,5 +1,6 @@
 import { HTMLElement, parse } from 'node-html-parser';
 import { normalizeGlyphs } from '@/lib/discover/utils';
+import logger from '@/lib/logger';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const RRA_BASE_URL = 'https://www.rra.gov.rw';
@@ -49,20 +50,35 @@ const extractThumbnail = (node: HTMLElement) => {
   return undefined;
 };
 
+const rraNewsLogger = logger.withDefaults({ tag: 'discover:rra-news' });
+
 export const fetchRraNewsArticles = async (
   limit = 30,
 ): Promise<DiscoverArticle[]> => {
-  const response = await fetch(RRA_NEWS_URL, {
-    headers: {
-      'User-Agent': 'Perplexica/1.0 (RRA Focus Mode)',
-      Accept: 'text/html,application/xhtml+xml',
-    },
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(RRA_NEWS_URL, {
+      headers: {
+        'User-Agent': 'Perplexica/1.0 (RRA Focus Mode)',
+        Accept: 'text/html,application/xhtml+xml',
+      },
+    });
+  } catch (error) {
+    rraNewsLogger.error('Failed to fetch RRA News & Events page.', {
+      error,
+      url: RRA_NEWS_URL,
+    });
+    return [];
+  }
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch RRA News & Events page. Status: ${response.status}`,
-    );
+    rraNewsLogger.warn('RRA News & Events page returned non-success status.', {
+      status: response.status,
+      statusText: response.statusText,
+      url: RRA_NEWS_URL,
+    });
+    return [];
   }
 
   const html = await response.text();
