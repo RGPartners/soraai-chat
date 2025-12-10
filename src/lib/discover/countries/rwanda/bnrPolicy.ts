@@ -1,4 +1,5 @@
 import { normalizeGlyphs } from '@/lib/discover/utils';
+import logger from '@/lib/logger';
 import type { DiscoverArticle } from '@/lib/types/discover';
 
 const BNR_BASE_URL = 'https://bnr.rw';
@@ -27,20 +28,35 @@ const normalizeDate = (value?: string) => {
   return parsed.toISOString();
 };
 
+const bnrPolicyLogger = logger.withDefaults({ tag: 'discover:bnr-policy' });
+
 export const fetchBnrRegulatoryFrameworks = async (
   limit = 20,
 ): Promise<DiscoverArticle[]> => {
-  const response = await fetch(BNR_REGULATORY_FRAMEWORKS_URL, {
-    headers: {
-      'User-Agent': 'Perplexica/1.0 (Policy & Legislation)',
-      Accept: 'application/json',
-    },
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(BNR_REGULATORY_FRAMEWORKS_URL, {
+      headers: {
+        'User-Agent': 'Perplexica/1.0 (Policy & Legislation)',
+        Accept: 'application/json',
+      },
+    });
+  } catch (error) {
+    bnrPolicyLogger.error('Failed to fetch BNR regulatory frameworks.', {
+      error,
+      url: BNR_REGULATORY_FRAMEWORKS_URL,
+    });
+    return [];
+  }
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch BNR regulatory frameworks. Status: ${response.status}`,
-    );
+    bnrPolicyLogger.warn('BNR regulatory frameworks endpoint returned non-success status.', {
+      status: response.status,
+      statusText: response.statusText,
+      url: BNR_REGULATORY_FRAMEWORKS_URL,
+    });
+    return [];
   }
 
   const data = (await response.json()) as BnrRegulatoryDocument[];

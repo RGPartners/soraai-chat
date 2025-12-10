@@ -31,17 +31,217 @@ import {
   userRoleDefinition,
 } from './roles';
 
+const authLogger = logger.withDefaults({ tag: 'auth' });
+const anonymousLogger = authLogger.withDefaults({ tag: 'auth:anonymous' });
+
 const authConfig = getAuthConfig();
+
+type BaseURLSource = 'BETTER_AUTH_URL' | 'NEXT_PUBLIC_APP_URL' | 'VERCEL_URL';
+
+type BaseURLCandidate = {
+  value: string;
+  source: BaseURLSource;
+};
+
+type InvalidBaseURLCandidate = BaseURLCandidate & {
+  error: unknown;
+};
+
+type BaseURLResolution = {
+  baseURL: string | undefined;
+  source: BaseURLSource | null;
+  skippedDev: BaseURLCandidate[];
+  invalid: InvalidBaseURLCandidate[];
+  reason: 'resolved' | 'invalid' | 'skipped-dev-host' | 'missing';
+};
+
+const LOCAL_DEV_HOSTNAMES = new Set([
+  'localhost',
+  '127.0.0.1',
+  '0.0.0.0',
+  '::1',
+  '[::1]',
+  '[::ffff:127.0.0.1]',
+]);
+
+const normalizeHostname = (hostname: string): string => hostname.trim().toLowerCase();
+
+const isLocalDevHostname = (hostname: string): boolean => {
+  const normalized = normalizeHostname(hostname);
+  return LOCAL_DEV_HOSTNAMES.has(normalized) || normalized.startsWith('127.');
+};
+
+const resolveAuthBaseURL = (): BaseURLResolution => {
+  const candidates = [
+    process.env.BETTER_AUTH_URL
+      ? { value: process.env.BETTER_AUTH_URL, source: 'BETTER_AUTH_URL' as const }
+      : null,
+    process.env.NEXT_PUBLIC_APP_URL
+      ? { value: process.env.NEXT_PUBLIC_APP_URL, source: 'NEXT_PUBLIC_APP_URL' as const }
+      : null,
+    process.env.VERCEL_URL
+      ? { value: `https://${process.env.VERCEL_URL}`, source: 'VERCEL_URL' as const }
+      : null,
+  ].filter((candidate): candidate is BaseURLCandidate => candidate !== null);
+
+  const skippedDev: BaseURLCandidate[] = [];
+  const invalid: InvalidBaseURLCandidate[] = [];
+
+  for (const candidate of candidates) {
+    try {
+      const parsed = new URL(candidate.value);
+
+      const hostname = parsed.hostname;
+      const isDevHostname =
+        process.env.NODE_ENV !== 'production' && isLocalDevHostname(hostname);
+
+      if (isDevHostname) {
+        skippedDev.push(candidate);
+        continue;
+      }
+
+      return {
+        baseURL: parsed.origin,
+        source: candidate.source,
+        skippedDev,
+        invalid,
+        reason: 'resolved',
+      };
+    } catch (error) {
+      invalid.push({ ...candidate, error });
+    }
+  }
+
+  if (invalid.length > 0) {
+    return {
+      baseURL: undefined,
+      source: null,
+      skippedDev,
+      invalid,
+      reason: 'invalid',
+    };
+  }
+
+  if (skippedDev.length > 0) {
+    return {
+      baseURL: undefined,
+      source: null,
+      skippedDev,
+      invalid,
+      reason: 'skipped-dev-host',
+    };
+  }
+
+  return {
+    baseURL: undefined,
+    source: null,
+    skippedDev,
+    invalid,
+    reason: 'missing',
+  };
+};
+
+const createLocalTrustedOriginsResolver = (
+  skippedDevCandidates: BaseURLCandidate[],
+): BetterAuthOptions['trustedOrigins'] | undefined => {
+  if (process.env.NODE_ENV === 'production') {
+    return undefined;
+  }
+
+  const allowedHostnames = new Set<string>();
+
+  for (const candidate of skippedDevCandidates) {
+    try {
+      allowedHostnames.add(normalizeHostname(new URL(candidate.value).hostname));
+    } catch {
+      // ignore malformed entries
+    }
+  }
+
+  for (const host of LOCAL_DEV_HOSTNAMES) {
+    allowedHostnames.add(host);
+  }
+
+  if (allowedHostnames.size === 0) {
+    return undefined;
+  }
+
+  let hasLogged = false;
+
+  return async (request) => {
+    const originHeader =
+      request.headers.get('origin') ??
+      request.headers.get('referer') ??
+      request.headers.get('x-forwarded-origin');
+
+    if (!originHeader) {
+      return [];
+    }
+
+    try {
+      const originURL = new URL(originHeader);
+      const hostname = normalizeHostname(originURL.hostname);
+
+      if (!allowedHostnames.has(hostname) && !hostname.startsWith('127.')) {
+        return [];
+      }
+
+      if (!hasLogged) {
+        authLogger.debug('Allowing Better Auth request origin for local development.', {
+          origin: originURL.origin,
+        });
+        hasLogged = true;
+      }
+
+      return [originURL.origin];
+    } catch {
+      return [];
+    }
+  };
+};
 
 const secret = process.env.BETTER_AUTH_SECRET;
 if (!secret) {
   throw new Error('BETTER_AUTH_SECRET must be set');
 }
 
-const baseURL =
-  process.env.BETTER_AUTH_URL ||
-  process.env.NEXT_PUBLIC_APP_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined);
+const baseURLResolution = resolveAuthBaseURL();
+const baseURL = baseURLResolution.baseURL;
+
+if (baseURLResolution.invalid.length > 0) {
+  for (const candidate of baseURLResolution.invalid) {
+    authLogger.warn('Ignoring invalid Better Auth base URL value.', {
+      source: candidate.source,
+      value: candidate.value,
+      error:
+        candidate.error instanceof Error
+          ? candidate.error.message
+          : String(candidate.error),
+    });
+  }
+}
+
+if (
+  baseURLResolution.reason === 'skipped-dev-host' ||
+  (baseURLResolution.reason === 'resolved' && baseURLResolution.skippedDev.length > 0)
+) {
+  const skipped = baseURLResolution.skippedDev.at(-1);
+  if (skipped) {
+    authLogger.debug('Skipping Better Auth base URL for local-only hostname.', {
+      source: skipped.source,
+      value: skipped.value,
+    });
+  }
+}
+
+const dynamicTrustedOrigins =
+  baseURLResolution.reason === 'skipped-dev-host'
+    ? createLocalTrustedOriginsResolver(baseURLResolution.skippedDev)
+    : undefined;
+
+if (dynamicTrustedOrigins) {
+  authLogger.debug('Enabling Better Auth dynamic trusted origins resolver for development.');
+}
 
 const trustedProviders = (
   Object.keys(authConfig.socialProviders) as SocialAuthenticationProvider[]
@@ -50,6 +250,7 @@ const trustedProviders = (
 const options: BetterAuthOptions = {
   secret,
   baseURL,
+  trustedOrigins: dynamicTrustedOrigins,
   user: {
     changeEmail: { enabled: true },
     deleteUser: { enabled: true },
@@ -108,9 +309,6 @@ const options: BetterAuthOptions = {
   },
   socialProviders: authConfig.socialProviders,
 };
-
-const authLogger = logger.withDefaults({ tag: 'auth' });
-const anonymousLogger = authLogger.withDefaults({ tag: 'auth:anonymous' });
 
 export const auth = betterAuth({
   ...options,
