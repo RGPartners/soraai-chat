@@ -41,6 +41,13 @@ const main = async () => {
 
     logger.info('Detected Vercel environment. Triggering database migrations.');
     await runCommand('pnpm db:migrate', 'Database migration');
+
+    if (process.env.SEED_ADMIN_EMAIL && process.env.SEED_ADMIN_PASSWORD) {
+      logger.info('Seeding admin user as part of Vercel deployment.');
+      await runCommand('pnpm seed:admin', 'Admin user seed');
+    } else {
+      logger.info('SEED_ADMIN_EMAIL or SEED_ADMIN_PASSWORD not set. Skipping admin seed.');
+    }
     return;
   }
 
