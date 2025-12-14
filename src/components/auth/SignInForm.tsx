@@ -50,11 +50,14 @@ const SignInForm = ({
 
     try {
       setLoading(true);
-      await authClient.signIn.email({
-        email,
-        password,
-        callbackURL: redirectTarget,
-      });
+      await authClient.signIn.email(
+        {
+          email,
+          password,
+          callbackURL: redirectTarget,
+        },
+        { throw: true },
+      );
       router.push(redirectTarget);
       router.refresh();
     } catch (error: any) {
