@@ -40,7 +40,9 @@ export default async function RootLayout({
                 unstyled: true,
                 classNames: {
                   toast:
-                    'bg-light-secondary dark:bg-dark-secondary dark:text-white/70 text-black-70 rounded-lg p-4 flex flex-row items-center space-x-2',
+                    'bg-light-secondary dark:bg-dark-secondary dark:text-white/70 text-black-70 rounded-lg p-4 flex flex-row items-center gap-3',
+                  actionButton:
+                    'ml-auto whitespace-nowrap rounded-md border border-black/10 px-3 py-1 text-sm font-medium text-black hover:bg-black/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10',
                 },
               }}
             />
