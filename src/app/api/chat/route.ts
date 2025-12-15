@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { AIMessage, BaseMessage, HumanMessage } from '@langchain/core/messages';
 import { EventEmitter } from 'stream';
 import db from '@/lib/db';
+import { messageRepository } from '@/lib/db/pg/repositories/message-repository';
 import { chats, messages as messagesSchema } from '@/lib/db/schema';
 import { and, eq, gt } from 'drizzle-orm';
 import { getFileDetails } from '@/lib/utils/files';
@@ -10,6 +11,7 @@ import { z } from 'zod';
 import ModelRegistry from '@/lib/models/registry';
 import { ModelWithProvider } from '@/lib/models/types';
 import { getSessionFromRequest } from '@/lib/auth/session';
+import { getEntitlementForSession } from '@/lib/entitlements';
 import logger from '@/lib/logger';
 
 type ChatRecord = typeof chats.$inferSelect;
@@ -21,6 +23,13 @@ export const config = {
 };
 
 const chatLogger = logger.withDefaults({ tag: 'api:chat' });
+
+const MESSAGE_RATE_LIMIT_WINDOW_HOURS = 24;
+const MESSAGE_RATE_LIMIT_ERROR = {
+  code: 'guest_limit_reached',
+  message:
+    'You have reached the free conversation limit for today. Sign in to continue chatting.',
+};
 
 const messageSchema = z.object({
   messageId: z.string().min(1, 'Message ID is required'),
@@ -282,6 +291,22 @@ export const POST = async (req: Request) => {
     }
 
     const userId = session.user.id;
+    const { entitlement } = getEntitlementForSession(session);
+
+    if (entitlement.maxMessagesPerDay !== null && userId) {
+      const since = new Date(
+        Date.now() - MESSAGE_RATE_LIMIT_WINDOW_HOURS * 60 * 60 * 1000,
+      );
+      const sentMessagesCount = await messageRepository.countUserMessagesSince({
+        userId,
+        since,
+      });
+
+      if (sentMessagesCount >= entitlement.maxMessagesPerDay) {
+        return Response.json(MESSAGE_RATE_LIMIT_ERROR, { status: 429 });
+      }
+    }
+
     const reqBody = (await req.json()) as Body;
 
     const parseBody = safeValidateBody(reqBody);

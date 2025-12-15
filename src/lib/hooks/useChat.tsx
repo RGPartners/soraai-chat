@@ -18,7 +18,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { getSuggestions } from '../actions';
 import { MinimalProvider } from '../models/types';
@@ -323,6 +323,7 @@ export const chatContext = createContext<ChatContext>({
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const params: { chatId: string } = useParams();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const initialMessageParam =
     searchParams.get('q') ?? searchParams.get('initial');
   const initialMessage = initialMessageParam?.trim() ?? null;
@@ -901,9 +902,59 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       }),
     });
 
-    if (!res.body) throw new Error('No response body');
+    if (!res.ok) {
+      let errorMessage = 'Failed to send message. Please try again.';
+      let errorCode: string | undefined;
 
-    const reader = res.body?.getReader();
+      try {
+        const errorData = await res.json();
+        if (typeof errorData?.message === 'string') {
+          errorMessage = errorData.message;
+        }
+        if (typeof errorData?.code === 'string') {
+          errorCode = errorData.code;
+        }
+      } catch (error) {
+        console.warn('Failed to parse chat API error payload.', error);
+      }
+
+      setMessages((prevMessages) =>
+        prevMessages.filter((entry) => entry.messageId !== messageId),
+      );
+      const toastAction =
+        errorCode === 'guest_limit_reached'
+          ? {
+              label: 'Sign in',
+              onClick: () => {
+                if (typeof window === 'undefined') {
+                  router.push('/sign-in');
+                  return;
+                }
+                const nextTarget = `${window.location.pathname}${window.location.search}`;
+                router.push(`/sign-in?next=${encodeURIComponent(nextTarget)}`);
+              },
+            }
+          : undefined;
+
+      if (toastAction) {
+        toast.error(errorMessage, { action: toastAction });
+      } else {
+        toast.error(errorMessage);
+      }
+      setLoading(false);
+      return;
+    }
+
+    if (!res.body) {
+      setMessages((prevMessages) =>
+        prevMessages.filter((entry) => entry.messageId !== messageId),
+      );
+      toast.error('The server returned an empty response. Please try again.');
+      setLoading(false);
+      return;
+    }
+
+    const reader = res.body.getReader();
     const decoder = new TextDecoder('utf-8');
 
     let partialChunk = '';
